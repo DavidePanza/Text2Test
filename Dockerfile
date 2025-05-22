@@ -14,7 +14,7 @@ RUN curl -fsSL https://ollama.com/install.sh | sh
 # Start Ollama and download the model during build
 RUN ollama serve & \
     sleep 10 && \
-    ollama pull gemma3:4b && \
+    ollama pull gemma-3-12b-it-q4_0 && \
     killall ollama
 
 # Install Python packages

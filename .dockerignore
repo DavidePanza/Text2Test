@@ -1,0 +1,8 @@
+.DS_Store
+.env
+.git
+.gitignore
+notebooks/
+data/
+dev/
+plan.md
