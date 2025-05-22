@@ -47,6 +47,7 @@
 #     # Start RunPod serverless
 #     runpod.serverless.start({"handler": handler})
 
+# new version
 
 import requests
 import subprocess
