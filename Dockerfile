@@ -25,7 +25,7 @@ RUN pip3 install --no-cache-dir -r /requirements.txt
 WORKDIR /app
 
 # Copy files
-COPY src/ /app/src/
+COPY model/ /app/src/
 COPY start.sh /app/
 
 # Make start script executable

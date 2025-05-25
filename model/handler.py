@@ -47,14 +47,14 @@
 #     # Start RunPod serverless
 #     runpod.serverless.start({"handler": handler})
 
-# new version
+# new version 
 
 import requests
 import subprocess
 import json
 import time
 import os
-import runpod
+import model
 
 def check_system_status():
     """Check if all services are running properly"""
@@ -255,7 +255,7 @@ def handler(job):
     }
 
 # RunPod serverless handler
-runpod.serverless.start({"handler": handler})
+model.serverless.start({"handler": handler})
 
 # For local testing
 if __name__ == "__main__":
