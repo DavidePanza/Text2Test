@@ -1,5 +1,5 @@
 data/
-dev/
+/dev/
 backup/
 .env
 plan.md
