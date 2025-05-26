@@ -6,7 +6,7 @@ try:
 except LookupError:
     nltk.download("punkt")
 
-def text_chunking(text, max_words=750, overlap_sentences=5, min_words=400):
+def text_chunking(text, max_words=750, min_words=400, overlap_sentences=5):
     """
     Creates text chunks up to max_words using sentences as undivisible units.
     Each chunk can overlap with the next one by overlap_sentences.
@@ -72,3 +72,23 @@ def text_chunking(text, max_words=750, overlap_sentences=5, min_words=400):
             final_chunks.append(chunk)
     
     return final_chunks
+
+
+def chapters_chunking(chapters, max_words=500, min_words=300, overlap_sentences=5):
+    """
+    Chunk the chapters into smaller parts based on word count and overlap.
+    
+    :param chapters: List of chapter dictionaries.
+    :param max_words: Maximum number of words per chunk.
+    :param min_words: Minimum number of words per chunk.
+    :param overlap_sentences: Number of sentences to overlap between chunks.
+    :return: List of dictionaries with chapter information and their respective chunks.
+    """
+    return [
+        {
+            'chapter_number': chapter['chapter_number'],
+            'chapter_title': chapter['chapter_title'],
+            'chunks': text_chunking(chapter['content'], max_words, min_words, overlap_sentences)
+        }
+        for chapter in chapters
+    ]

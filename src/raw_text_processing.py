@@ -76,13 +76,13 @@ def extract_text(doc, start_chapter=None):
             doc[page_range].get_text("text")
             for page_range in range(start_chapter, len(doc))
         ]
-        return all_pages_text 
+        return "\n".join(all_pages_text) 
     else:
         warnings.warn(
             "No chapter start has been detected: extracting text from the entire PDF.",
             UserWarning
         )
-        return doc
+        return "\n".join(page.get_text("text") for page in doc)
     
 
 def process_pdf(pdf_path):
@@ -113,3 +113,41 @@ def extract_pages_range(pdf_path, page_range):
             else:
                 print(f"Warning: Page number {page_num} is out of bounds.")
     return "\n".join(chapters_content_list)
+
+
+def extract_chapters(chapters_json, pages_data_corrected):
+    """
+    Extract chapters from the provided JSON and pages data.
+    Args:
+        chapters_json (list): List of chapter dictionaries from the TOC.
+        pages_data_corrected (list): List of page data dictionaries with content.
+    Returns:
+        list: List of dictionaries, each containing chapter details and content.
+    """
+    # Initialize an empty list to hold chapter dictionaries
+    chapters = []
+    
+    # Iterate through each chapter in the JSON
+    for chapter in chapters_json:
+        start_page = chapter['start_page']
+        end_page = chapter['end_page']
+        chapter_text = []
+
+        # Extract content for the chapter from the pages data
+        for chapter_range in range(start_page-1, end_page):
+            chapter_text.append(pages_data_corrected[chapter_range]['content'])
+
+        chapter_text = ' '.join(chapter_text)
+
+        # Create a dictionary for the chapter
+        chapter_dict = {
+            'chapter_number': chapter['chapter_number'],
+            'chapter_title': chapter['chapter_title'],
+            'start_page': start_page,
+            'end_page': end_page,
+            'content': chapter_text
+        }
+
+        chapters.append(chapter_dict)
+    
+    return chapters
