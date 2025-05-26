@@ -56,7 +56,7 @@
 #     ]
 
 
-def get_toc_extraction_messages(toc_text: str):
+def toc_prompt(toc_text: str):
     # Convert to Gemma 3 format - single string with proper turn markers
     prompt = f"""<start_of_turn>user
 You are a precise document parser that extracts structured information from table of contents. You NEVER hallucinate, invent, or make up information. You ONLY extract what is explicitly present in the provided text. If you cannot find clear chapter information, you return an empty array.
