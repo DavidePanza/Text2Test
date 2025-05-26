@@ -1,10 +1,10 @@
 import random
 
 
-def query_collection(collection, query='', nresults=3, sim_th=None):
+def query_collection(collection, query='', nresults=3, context_multiplier=2, sim_th=None):
     """Get relevant text from a collection for a given query"""
 
-    query_result = collection.query(query_texts=query, n_results=nresults)
+    query_result = collection.query(query_texts=query, n_results=nresults*context_multiplier)
     docs = query_result.get('documents')[0]
 
     if sim_th is not None:
