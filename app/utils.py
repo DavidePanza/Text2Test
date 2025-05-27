@@ -2,6 +2,9 @@ import streamlit as st
 import os
 import sqlite3
 import base64
+import fitz  # PyMuPDF
+from PIL import Image
+import io
 
 def configure_page() -> None:
     """
@@ -105,10 +108,36 @@ def upload_pdf():
     uploaded_file = st.file_uploader("Upload PDF", type=["pdf"])
     
     if uploaded_file is not None:
-        st.session_state['uploaded_pdf'] = uploaded_file
+        pdf_bytes = uploaded_file.read()  # read bytes immediately
+        if pdf_bytes:
+            st.session_state['uploaded_pdf_bytes'] = pdf_bytes
+            st.session_state['uploaded_pdf_name'] = uploaded_file.name
+            st.success(f"File '{uploaded_file.name}' uploaded successfully!")
+        else:
+            st.error("Uploaded file is empty!")
+    elif uploaded_file is None and st.session_state.get('uploaded_pdf_bytes') is not None:
+        # File already uploaded, so just confirm
         st.success("File uploaded successfully!")
     else:
-        st.info("No file uploaded yet.")
+        st.info("Please upload a PDF file to proceed.")
+
+
+def show_pdf_preview():
+    if 'uploaded_pdf_bytes' in st.session_state:
+        pdf_bytes = st.session_state['uploaded_pdf_bytes']
+        try:
+            doc = fitz.open(stream=pdf_bytes, filetype="pdf")
+            if doc.page_count < 1:
+                st.sidebar.error("PDF has no pages!")
+                return
+            page = doc.load_page(0)
+            pix = page.get_pixmap()
+            img = Image.open(io.BytesIO(pix.tobytes("png")))
+            st.sidebar.image(img, caption="First page preview", use_container_width=True)
+        except Exception as e:
+            st.sidebar.error(f"Failed to open PDF: {e}")
+    else:
+        st.sidebar.write("Upload a PDF to see a preview here.")
 
 
 def initialise_session_state():
@@ -121,6 +150,10 @@ def initialise_session_state():
         st.session_state['uploaded_pdf'] = None
     if 'uploaded_files' not in st.session_state:
         st.session_state['uploaded_files'] = []
+    if 'uploaded_pdf_name' not in st.session_state:
+        st.session_state['uploaded_pdf_name'] = None
+    if 'pdf_bytes' not in st.session_state:
+        st.session_state['pdf_bytes'] = None
 
 
 def load_uploaded_files(uploaded_files_log):

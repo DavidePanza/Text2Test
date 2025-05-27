@@ -1,17 +1,16 @@
 import streamlit as st
 from utils import *
 from backend.raw_text_processing import *
+from PIL import Image
+import os
+
 
 
 # Configuration
 configure_page()
 initialise_session_state()
 
-# Page selection
-PAGES = {
-    "topic": "Topic Questions",
-    "chapter": "Chapter Questions"
-}
+st.write("Current working directory:", os.getcwd())
 
 # Set default page if not specified
 if "page" not in st.query_params:
@@ -22,6 +21,8 @@ if st.query_params.page == "topic":
     st.switch_page("pages/2_topic_questions.py")
 elif st.query_params.page == "chapter":
     st.switch_page("pages/1_chapter_questions.py")
+elif st.query_params.page == "inspect":
+    st.switch_page("pages/3_inspect_pdf.py")
 else:
     # Welcome message
     st.title("Welcome to Test2Test!")
@@ -29,6 +30,31 @@ else:
 
     # Upload PDF file
     upload_pdf()
+    st.info(st.session_state['uploaded_pdf_name'])
+    show_pdf_preview()
+
+    # if st.session_state.get('uploaded_pdf') is not None:
+    #     uploaded_file = st.session_state.get('uploaded_pdf')
+    #     pdf_bytes = uploaded_file.read()  # read bytes from uploaded file
+        
+    #     # Open PDF from bytes using PyMuPDF
+    #     doc = fitz.open(stream=pdf_bytes, filetype="pdf")
+        
+    #     # Load first page
+    #     page = doc.load_page(0)
+        
+    #     # Render page to pixmap (image)
+    #     pix = page.get_pixmap()
+        
+    #     # Convert pixmap to bytes (PNG)
+    #     img_data = pix.tobytes("png")
+        
+    #     # Open image with PIL
+    #     img = Image.open(io.BytesIO(img_data))
+        
+    #     # Show image in sidebar
+    #     st.sidebar.image(img, caption="First page preview", use_container_width=True)
+
     breaks(2)
 
     # Main content buttons
@@ -49,7 +75,7 @@ else:
     }
     </style>
     """)
-    
+
     with cols[0]:
         if st.button("Generate Questions on a Topic", key="main_topic"):
             st.query_params.page = "topic"
