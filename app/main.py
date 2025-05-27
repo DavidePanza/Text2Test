@@ -7,24 +7,23 @@ from backend.raw_text_processing import *
 configure_page()
 initialise_session_state()
 
-# Get current page or default to "main"
-page = st.query_params.get("page", ["main"])[0]
+# Page selection
+PAGES = {
+    "topic": "Topic Questions",
+    "chapter": "Chapter Questions"
+}
 
-def set_page(page_name):
-    st.query_params = {"page": [page_name]}
+# Set default page if not specified
+if "page" not in st.query_params:
+    st.query_params.page = "main"
 
-if page == "chapter_questions":
-    st.title("Chapter Questions Page")
-    st.button("Back to Main", on_click=set_page, args=("main",))
-    # Add your chapter questions content here
-
-elif page == "topic_questions":
-    st.title("Topic Questions Page")
-    st.button("Back to Main", on_click=set_page, args=("main",))
-    # Add your topic questions content here
-
+# Navigation handling
+if st.query_params.page == "topic":
+    st.switch_page("pages/2_topic_questions.py")
+elif st.query_params.page == "chapter":
+    st.switch_page("pages/1_chapter_questions.py")
 else:
-    # Main Page Content
+    # Welcome message
     st.title("Welcome to Test2Test!")
     st.write("This app helps you generate questions from text documents or specific topics.")
 
@@ -52,66 +51,13 @@ else:
     """)
     
     with cols[0]:
-        st.button("Generate Questions on a Topic", 
-                 on_click=set_page, 
-                 args=("topic_questions",),
-                 key="main_topic")
-    
+        if st.button("Generate Questions on a Topic", key="main_topic"):
+            st.query_params.page = "topic"
+            st.rerun()
     with cols[1]:
-        st.button("Generate Questions from a Chapter", 
-                 on_click=set_page, 
-                 args=("chapter_questions",),
-                 key="main_chapter")
-# # Page selection
-# PAGES = {
-#     "topic": "Topic Questions",
-#     "chapter": "Chapter Questions"
-# }
-
-# # Set default page if not specified
-# if "page" not in st.query_params:
-#     st.query_params.page = "main"
-
-# # Navigation handling
-# if st.query_params.page == "topic":
-#     st.switch_page("pages/2_topic_questions.py")
-# elif st.query_params.page == "chapter":
-#     st.switch_page("pages/1_chapter_questions.py")
-# else:
-#     # Welcome message
-#     st.title("Welcome to Test2Test!")
-#     st.write("This app helps you generate questions from text documents or specific topics.")
-
-#     # Upload PDF file
-#     upload_pdf()
-#     breaks(2)
-
-#     # Main content buttons
-#     st.write("Please choose an option to generate questions:")
-#     cols = st.columns(2)
-#     st.html("""
-#     <style>
-#     div.stButton > button:first-child {
-#         width: 100%;
-#         padding: 30px 0;
-#         font-size: 20px;
-#         background-color: #cce5ff;
-#         border-radius: 10px;
-#         border: 2px solid #339af0;
-#     }
-#     div.stButton > button:first-child:hover {
-#         background-color: #99ccff;
-#     }
-#     </style>
-#     """)
-#     with cols[0]:
-#         if st.button("Generate Questions on a Topic", key="main_topic"):
-#             st.query_params.page = "topic"
-#             st.rerun()
-#     with cols[1]:
-#         if st.button("Generate Questions from a Chapter", key="main_chapter"):
-#             st.query_params.page = "chapter"
-#             st.rerun()
+        if st.button("Generate Questions from a Chapter", key="main_chapter"):
+            st.query_params.page = "chapter"
+            st.rerun()
 
 
 #     breaks(2)
