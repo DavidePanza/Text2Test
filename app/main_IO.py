@@ -13,7 +13,10 @@ DEFAULT_SESSION_STATE = {
     'toc': None,
     'full_text': None,
     'pages_data_infos': None,
-    'chapters_starting_page': None
+    'chapters_starting_page': None,
+    'chapters_dict': None,
+    'chapters_extracted': None,
+    'chapters_chunked': None
 }
 
 

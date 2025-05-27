@@ -38,10 +38,12 @@ else:
         process_pdf() # maybe combine this with the upload_pdf function
         st.session_state["pages_data_infos"] = st.session_state["pages_data_infos"][st.session_state["chapters_starting_page"]:]
 
-    show_pdf_preview()
-    
-    st.info(st.session_state['uploaded_pdf_name'])      
-    st.write(f'{st.session_state["full_text"][:200]}') # remove this
+    try:
+        st.info(st.session_state['uploaded_pdf_name'])      
+        st.write(f'{st.session_state["full_text"][:200]}') # remove this
+        show_pdf_preview()
+    except:
+        pass
     
     breaks(2)
 

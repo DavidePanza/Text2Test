@@ -1,5 +1,6 @@
 from nltk.tokenize import sent_tokenize
 import nltk
+import streamlit as st
 
 try:
     nltk.data.find("tokenizers/punkt")
@@ -84,7 +85,7 @@ def chapters_chunking(chapters, max_words=500, min_words=300, overlap_sentences=
     :param overlap_sentences: Number of sentences to overlap between chunks.
     :return: List of dictionaries with chapter information and their respective chunks.
     """
-    return [
+    st.session_state['chapters_chunked'] = [
         {
             'chapter_number': chapter['chapter_number'],
             'chapter_title': chapter['chapter_title'],

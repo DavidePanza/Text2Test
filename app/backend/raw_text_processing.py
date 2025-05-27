@@ -136,7 +136,7 @@ def extract_pages_range(page_range):
     st.session_state["toc"] = toc_text
 
 
-def extract_chapters(chapters_json, pages_data_corrected):
+def extract_chapters(chapters_dict, pages_data_corrected):
     """
     Extract chapters from the provided JSON and pages data.
     Args:
@@ -149,7 +149,7 @@ def extract_chapters(chapters_json, pages_data_corrected):
     chapters = []
     
     # Iterate through each chapter in the JSON
-    for chapter in chapters_json:
+    for chapter in chapters_dict:
         start_page = chapter['start_page']
         end_page = chapter['end_page']
         chapter_text = []
@@ -171,4 +171,4 @@ def extract_chapters(chapters_json, pages_data_corrected):
 
         chapters.append(chapter_dict)
     
-    return chapters
+    st.session_state['chapters_extracted'] = chapters
