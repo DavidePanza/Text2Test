@@ -36,7 +36,8 @@ else:
 
     if st.session_state.get("uploaded_pdf_bytes") is not None and st.session_state.get("full_text") is None:
         process_pdf() # maybe combine this with the upload_pdf function
-        
+        st.session_state["pages_data_infos"] = st.session_state["pages_data_infos"][st.session_state["chapters_starting_page"]:]
+
     show_pdf_preview()
     
     st.info(st.session_state['uploaded_pdf_name'])      

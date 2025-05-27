@@ -5,12 +5,14 @@ import io
 
 
 DEFAULT_SESSION_STATE = {
+    'doc': None,
     'page_choice': None,
     'uploaded_pdf_name': None,
     'uploaded_pdf_bytes': None,
     'toc_page_range': None,
+    'toc': None,
     'full_text': None,
-    'pages_number_infos': None,
+    'pages_data_infos': None,
     'chapters_starting_page': None
 }
 

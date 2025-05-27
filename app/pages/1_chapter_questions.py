@@ -2,6 +2,7 @@ import streamlit as st
 from app.utils import *
 from app.main_IO import *
 from app.pages.page1_utils import *
+from app.backend.raw_text_processing import *
 
 
 st.title("Generate Questions from a Chapter")
@@ -38,3 +39,5 @@ with st.container():
 if st.session_state['toc_page_range'] is not None:
     st.write(f"Selected page range: {st.session_state['toc_page_range'][0] + 1} to {st.session_state['toc_page_range'][1] + 1}")
 
+    extract_pages_range(st.session_state['toc_page_range'])
+    st.write(f"Table of Contents (TOC): {st.session_state.get('toc')}")

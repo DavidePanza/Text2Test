@@ -91,34 +91,49 @@ def process_pdf():
     Processes a PDF file to extract text starting from the first chapter.
     """
     pdf_bytes = st.session_state.get("uploaded_pdf_bytes")
-    doc = fitz.open(stream=pdf_bytes, filetype="pdf")
+    if not pdf_bytes:
+        st.error("No PDF uploaded.")
+        return
 
     with st.spinner("Processing uploaded file..."):
-        pages_number_infos = extract_page_data_fitz(doc)
-        chapters_starting_page = correct_page_numbers(pages_number_infos)
-        full_text = extract_text(doc, chapters_starting_page)
+        pdf_bytes = st.session_state.get("uploaded_pdf_bytes")
+        if pdf_bytes is None:
+            st.error("No PDF uploaded.")
+            return
 
-    doc.close()
+        with fitz.open(stream=pdf_bytes, filetype="pdf") as doc:
+            # Extract data once
+            pages_data_infos = extract_page_data_fitz(doc)
+            chapters_starting_page = correct_page_numbers(pages_data_infos)
+            full_text = extract_text(doc, chapters_starting_page)
 
-    st.session_state['full_text'] = full_text
-    st.session_state['pages_number_infos'] = pages_number_infos
-    st.session_state['chapters_starting_page'] = chapters_starting_page
+        # Store results
+        st.session_state['full_text'] = full_text
+        st.session_state['pages_data_infos'] = pages_data_infos
+        st.session_state['chapters_starting_page'] = chapters_starting_page
 
 
-def extract_pages_range(pdf_path, page_range):
+def extract_pages_range(page_range):
     """
     Extracts text from specific pages in a PDF file using PyMuPDF.
-    This is used to extract toc based on a given range of page numbers indicated by the user.
+    This is used to extract TOC based on a given range of page numbers indicated by the user.
     """
+    pdf_bytes = st.session_state.get("uploaded_pdf_bytes")
+    if pdf_bytes is None:
+        st.error("No PDF uploaded.")
+        return ""
+
     chapters_content_list = []
-    with fitz.open(pdf_path) as doc:
+    with fitz.open(stream=pdf_bytes, filetype="pdf") as doc:
         for page_num in page_range:
             if 0 <= page_num < len(doc):
                 text = doc[page_num].get_text("text")
                 chapters_content_list.append(text)
             else:
                 print(f"Warning: Page number {page_num} is out of bounds.")
-    return "\n".join(chapters_content_list)
+
+    toc_text = "\n".join(chapters_content_list)
+    st.session_state["toc"] = toc_text
 
 
 def extract_chapters(chapters_json, pages_data_corrected):
