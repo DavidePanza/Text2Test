@@ -1,7 +1,7 @@
 import streamlit as st
 from utils import *
+from main_IO import *
 from backend.raw_text_processing import *
-from PIL import Image
 import os
 import sys
 
@@ -33,8 +33,15 @@ else:
 
     # Upload PDF file
     upload_pdf()
-    st.info(st.session_state['uploaded_pdf_name'])
+
+    if st.session_state.get("uploaded_pdf_bytes") is not None and st.session_state.get("full_text") is None:
+        process_pdf() # maybe combine this with the upload_pdf function
+        
     show_pdf_preview()
+    
+    st.info(st.session_state['uploaded_pdf_name'])      
+    st.write(f'{st.session_state["full_text"][:200]}') # remove this
+    
     breaks(2)
 
     # Main content buttons
@@ -64,77 +71,4 @@ else:
         if st.button("Generate Questions from a Chapter", key="main_chapter"):
             st.query_params.page = "chapter"
             st.rerun()
-
-
-
-
-    # if uploaded_file is not None:
-    #     pdf_document = fitz.open(stream=uploaded_file.read(), filetype="pdf")
-    #     total_pages = min(pdf_document.page_count, 30)  # Limit to 30 pages max
-
-    #     st.write(f"Showing first {total_pages} pages")
-
-    #     # CSS styles
-    #     css = """
-    #     <style>
-    #     .scrolling-wrapper {
-    #         display: flex;
-    #         overflow-x: auto;
-    #         padding: 10px;
-    #         gap: 15px;
-    #         border: 1px solid #ddd;
-    #         margin-bottom: 20px;
-    #     }
-    #     .page-container {
-    #         display: flex;
-    #         flex-direction: column;
-    #         align-items: center;
-    #         gap: 5px;
-    #         flex-shrink: 0;
-    #     }
-    #     .page-image {
-    #         height: 400px;
-    #         border: 1px solid #ccc;
-    #         border-radius: 4px;
-    #         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    #     }
-    #     .page-number {
-    #         font-weight: bold;
-    #         font-size: 16px;
-    #         color: #333;
-    #     }
-    #     </style>
-    #     """
-
-    #     # Build HTML content
-    #     html_content = css + '<div class="scrolling-wrapper">'
-        
-    #     for page_num in range(total_pages):
-    #         page = pdf_document.load_page(page_num)
-    #         pix = page.get_pixmap()
-    #         img_bytes = pix.tobytes("png")
-    #         base64_img = base64.b64encode(img_bytes).decode()
-
-    #         html_content += f"""
-    #         <div class="page-container">
-    #             <img class="page-image" src="data:image/png;base64,{base64_img}">
-    #             <div class="page-number">Page {page_num + 1}</div>
-    #         </div>
-    #         """
-        
-    #     html_content += '</div>'
-
-    #     # Render with st.html()
-    #     st.html(html_content)
-
-    # # ---- Vector Store Setup ----
-    # # Initialize ChromaDB and collection
-    # EMBEDDING_MODEL = "all-MiniLM-L6-v2"  
-    # client, embedding_func = initialize_chromadb(EMBEDDING_MODEL)
-    # collection_name = "my_collection"
-    # collection = initialize_collection(client, embedding_func, collection_name)
-
-    # # Define the directory for storing uploaded file names
-    # database_dir = get_database_directory()
-    # UPLOADED_FILES_LOG = os.path.join(database_dir, "uploaded_files.txt")
 

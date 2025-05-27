@@ -1,5 +1,6 @@
 import fitz  # PyMuPDF
 import warnings
+import streamlit as st
 
 
 def extract_page_data_fitz(doc):
@@ -85,18 +86,23 @@ def extract_text(doc, start_chapter=None):
         return "\n".join(page.get_text("text") for page in doc)
     
 
-def process_pdf(pdf_path):
+def process_pdf():
     """
     Processes a PDF file to extract text starting from the first chapter.
     """
-    doc = fitz.open(pdf_path)
+    pdf_bytes = st.session_state.get("uploaded_pdf_bytes")
+    doc = fitz.open(stream=pdf_bytes, filetype="pdf")
 
-    pages_data = extract_page_data_fitz(doc)
-    start_chapter = correct_page_numbers(pages_data)
-    full_text = extract_text(doc, start_chapter)
+    with st.spinner("Processing uploaded file..."):
+        pages_number_infos = extract_page_data_fitz(doc)
+        chapters_starting_page = correct_page_numbers(pages_number_infos)
+        full_text = extract_text(doc, chapters_starting_page)
 
     doc.close()
-    return full_text, pages_data, start_chapter
+
+    st.session_state['full_text'] = full_text
+    st.session_state['pages_number_infos'] = pages_number_infos
+    st.session_state['chapters_starting_page'] = chapters_starting_page
 
 
 def extract_pages_range(pdf_path, page_range):
