@@ -146,14 +146,14 @@ def initialise_session_state():
     """
     if 'page_choice' not in st.session_state:
         st.session_state['page_choice'] = None
-    if 'uploaded_pdf' not in st.session_state:
-        st.session_state['uploaded_pdf'] = None
     if 'uploaded_files' not in st.session_state:
         st.session_state['uploaded_files'] = []
     if 'uploaded_pdf_name' not in st.session_state:
         st.session_state['uploaded_pdf_name'] = None
     if 'pdf_bytes' not in st.session_state:
         st.session_state['pdf_bytes'] = None
+    if 'toc_page_range' not in st.session_state:
+        st.session_state['toc_page_range'] = None
 
 
 def load_uploaded_files(uploaded_files_log):

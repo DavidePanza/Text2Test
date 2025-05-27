@@ -3,14 +3,17 @@ from utils import *
 from backend.raw_text_processing import *
 from PIL import Image
 import os
+import sys
 
 
+# Add the root folder (one level above 'app') to sys.path
+root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if root_path not in sys.path:
+    sys.path.insert(0, root_path)
 
 # Configuration
 configure_page()
 initialise_session_state()
-
-st.write("Current working directory:", os.getcwd())
 
 # Set default page if not specified
 if "page" not in st.query_params:
@@ -32,29 +35,6 @@ else:
     upload_pdf()
     st.info(st.session_state['uploaded_pdf_name'])
     show_pdf_preview()
-
-    # if st.session_state.get('uploaded_pdf') is not None:
-    #     uploaded_file = st.session_state.get('uploaded_pdf')
-    #     pdf_bytes = uploaded_file.read()  # read bytes from uploaded file
-        
-    #     # Open PDF from bytes using PyMuPDF
-    #     doc = fitz.open(stream=pdf_bytes, filetype="pdf")
-        
-    #     # Load first page
-    #     page = doc.load_page(0)
-        
-    #     # Render page to pixmap (image)
-    #     pix = page.get_pixmap()
-        
-    #     # Convert pixmap to bytes (PNG)
-    #     img_data = pix.tobytes("png")
-        
-    #     # Open image with PIL
-    #     img = Image.open(io.BytesIO(img_data))
-        
-    #     # Show image in sidebar
-    #     st.sidebar.image(img, caption="First page preview", use_container_width=True)
-
     breaks(2)
 
     # Main content buttons
@@ -86,15 +66,7 @@ else:
             st.rerun()
 
 
-#     breaks(2)
-#     st.write(
-#         """
-#     Welcome to this Streamlit app!
-#     """
-#     )
-#     breaks(1)
 
-#  as I have a lot of .py code for backend pèrocessing, should I keep my app files in a different folder?
 
     # if uploaded_file is not None:
     #     pdf_document = fitz.open(stream=uploaded_file.read(), filetype="pdf")
