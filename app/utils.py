@@ -102,10 +102,6 @@ def load_background_image():
 
 def upload_pdf():
     st.write("Please upload a textbook in PDF format:")
-    
-    if 'uploaded_file' not in st.session_state:
-        st.session_state['uploaded_pdf'] = None
-    
     uploaded_file = st.file_uploader("Upload PDF", type=["pdf"])
     
     if uploaded_file is not None:
@@ -113,6 +109,18 @@ def upload_pdf():
         st.success("File uploaded successfully!")
     else:
         st.info("No file uploaded yet.")
+
+
+def initialise_session_state():
+    """
+    Initializes the session state variables.
+    """
+    if 'page_choice' not in st.session_state:
+        st.session_state['page_choice'] = None
+    if 'uploaded_pdf' not in st.session_state:
+        st.session_state['uploaded_pdf'] = None
+    if 'uploaded_files' not in st.session_state:
+        st.session_state['uploaded_files'] = []
 
 
 def load_uploaded_files(uploaded_files_log):
