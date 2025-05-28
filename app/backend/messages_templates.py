@@ -262,3 +262,4 @@ def format_contexts(contexts):
     for i, context in enumerate(contexts, 1):
         formatted += f"Context {i}:\n{context.strip()}\n\n"
     return formatted.strip()
+
