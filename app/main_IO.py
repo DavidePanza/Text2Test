@@ -16,7 +16,11 @@ DEFAULT_SESSION_STATE = {
     'chapters_starting_page': None,
     'chapters_dict': None,
     'chapters_extracted': None,
-    'chapters_chunked': None
+    'chapters_chunked': None,
+    'selected_chapter_idx': None,
+    'num_questions': None,
+    'chapter_selected_chunks': None,
+    'chapter_prompt': None
 }
 
 

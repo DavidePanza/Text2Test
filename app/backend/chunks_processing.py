@@ -1,4 +1,5 @@
 import random
+import streamlit as st
 
 
 def query_collection(collection, query='', nresults=3, context_multiplier=2, sim_th=None):
@@ -16,6 +17,7 @@ def query_collection(collection, query='', nresults=3, context_multiplier=2, sim
 
 def get_chapter_context(chapters, chapter_number, n_questions):
     chapter = chapters[chapter_number]
+    print(chapter.keys())
     if chapter is None:
         raise ValueError(f"Chapter {chapter_number} not found in the chapters list.")
     if 'chunks' not in chapter:
@@ -26,5 +28,5 @@ def get_chapter_context(chapters, chapter_number, n_questions):
         raise ValueError(f"Chapter {chapter_number} has no chunks to process.")
     
     chunks_indices = random.sample(range(n_chunks), min(n_questions, n_chunks))
-    selected_chunks = [chapter['chunks'][i] for i in chunks_indices]
-    return selected_chunks
+    st.session_state['chapter_selected_chunks'] = [chapter['chunks'][i] for i in chunks_indices]
+    

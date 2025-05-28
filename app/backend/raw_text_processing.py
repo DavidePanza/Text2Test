@@ -113,7 +113,7 @@ def process_pdf():
         st.session_state['chapters_starting_page'] = chapters_starting_page
 
 
-def extract_pages_range(page_range):
+def extract_toc(page_range):
     """
     Extracts text from specific pages in a PDF file using PyMuPDF.
     This is used to extract TOC based on a given range of page numbers indicated by the user.

@@ -4,6 +4,7 @@ from main_IO import *
 from backend.raw_text_processing import *
 import os
 import sys
+import logging
 
 
 # Add the root folder (one level above 'app') to sys.path
@@ -14,6 +15,9 @@ if root_path not in sys.path:
 # Configuration
 configure_page()
 initialise_session_state()
+
+level = st.selectbox("Logging level", ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"])
+logging.getLogger().setLevel(getattr(logging, level))
 
 # Set default page if not specified
 if "page" not in st.query_params:

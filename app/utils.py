@@ -1,4 +1,5 @@
 import streamlit as st
+import logging
 
 
 def configure_page() -> None:
@@ -23,4 +24,10 @@ def breaks(n=1):
     else:
         st.markdown("<br><br><br><br>",unsafe_allow_html=True)
 
+
+def debug_log(message):
+    """Log debug messages and optionally show them in the app."""
+    logging.debug(message)
+    if logging.getLogger().level <= logging.DEBUG:
+        st.code(f"[DEBUG] {message}", language="text")
 
