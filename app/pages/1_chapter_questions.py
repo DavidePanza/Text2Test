@@ -108,7 +108,8 @@ if st.session_state['chapter_selected_chunks'] is not None:
 if st.button("Generate Questions"):
     # Replace this with your actual question generation function
     with st.spinner("Generating questions..."):
-        questions = run_prompt(out)
+        questions = run_prompt(st.session_state['chapter_prompt'])
+        st.write(f"Generated Questions: {questions}")
 
 
 
