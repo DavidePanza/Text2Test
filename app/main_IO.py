@@ -26,7 +26,8 @@ DEFAULT_SESSION_STATE = {
     'chapter_prompt': None,
     'questions_json': None,
     'raw_output': None,  # remove this (only for debug)
-    'questions_to_download' : {},
+    'questions_ready': False,
+    'questions_to_download' : {}
 }
 
 

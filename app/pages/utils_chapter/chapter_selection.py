@@ -6,6 +6,7 @@ from app.backend.get_requests import generate_questions_from_chapter, generate_q
 from app.backend.text_processing import chapters_chunking
 from app.backend.chunks_processing import get_chapter_context
 
+
 def get_chapter_titles(chapters):
     """Generate list of chapter titles from chapters dict."""
     if chapters and isinstance(chapters[0], dict) and 'chapter_title' in chapters[0]:
@@ -78,9 +79,11 @@ def chapter_question_form():
 
             # Now trigger question generation with spinner
             chunks = st.session_state.get('chapter_selected_chunks', [])
-            with st.spinner("Generating questions..."):
+            with st.spinner("✨ Thinking..."):
                 if len(chunks) >= num_questions:
-                    st.session_state['raw_output'] = generate_questions_from_chapter(chunks, num_questions)
+                    generate_questions_from_chapter(chunks, num_questions)
                 else:
-                    debug_log("Using edgecase prompt because chunks < requested questions")
-                    st.session_state['questions_json'] = generate_questions_from_chapter_edgecase(chunks, num_questions)
+                    st.info("Using edge-case strategy: fewer chunks than questions.")
+                    generate_questions_from_chapter_edgecase(chunks, num_questions)
+
+                st.session_state['questions_ready'] = True 

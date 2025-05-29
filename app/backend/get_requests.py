@@ -20,8 +20,7 @@ def generate_questions_from_chapter(chunks, num_questions, max_questions=5):
         st.session_state['questions_json'] = clean_and_parse_json(raw_output)
         st.success("Questions generated successfully!")
     except:
-        print("Error parsing JSON, using raw output instead.")
-    return raw_output # Return raw output for debugging
+        print("Error parsing JSON")
 
 
 def generate_questions_from_chapter_edgecase(chunks, num_questions, max_questions=5):
@@ -33,5 +32,4 @@ def generate_questions_from_chapter_edgecase(chunks, num_questions, max_question
         st.session_state['questions_json'] = clean_and_parse_json(raw_output)
         st.success("Questions generated successfully!")
     except:
-        print("Error parsing JSON, using raw output instead.")
-    return raw_output # Return raw output for debugging
+        print("Error parsing JSON")
