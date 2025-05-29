@@ -76,56 +76,6 @@ def display_scrollable_pages():
         st.warning("No PDF file uploaded. Please upload a PDF file to generate questions from a chapter.")
 
 
-def page_range_selector():
-    with st.container():
-        # Header with better spacing
-        st.html("""
-        <style>
-            .range-header {
-                margin-bottom: 0.5rem;
-            }
-            .range-feedback {
-                margin-top: 0.5rem;
-            }
-        </style>
-        """)
-        
-        st.html('<h3 class="range-header">Select Page Range</h3>')
-        
-        # Columns with adjusted spacing
-        col1, col2, _, col4 = st.columns([1, 1, 1, 1])
-        
-        with col1:
-            start_page = st.number_input(
-                "Start page",
-                min_value=2,
-                max_value=st.session_state.get("chapters_starting_page", 30),
-                value=2,
-                key="start_page",
-                help="First page to include"
-            )
-        
-        with col2:
-            end_page = st.number_input(
-                "End page",
-                min_value=2,
-                max_value=st.session_state.get("chapters_starting_page", 30),
-                value=2,
-                key="end_page",
-                help="Last page to include"
-            )
-        
-        # Button with better styling and feedback
-        with col4:
-            st.write("")  # Vertical alignment spacer
-            if st.button("**Set Page Range**", 
-                        use_container_width=True,
-                        help="Apply the selected page range"):
-
-                st.session_state['toc_page_range'] = (start_page-1, end_page-1)
-                st.session_state.range_set = True
-
-
 def select_chapter():
     """
     Displays a radio button selection for chapters extracted from the TOC.
