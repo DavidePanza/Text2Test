@@ -70,7 +70,7 @@ if st.session_state.get('chapters_dict') is not None:
         accept_new_options=False,
     )
 
-    st.selected_chapter_title = options[0]
+    st.session_state.selected_chapter_title = options[0]
     st.write(f"Selected chapter: {options[0] if options else 'None'}")
 
 # Get the index of the selected title
@@ -114,7 +114,6 @@ if st.session_state['chapter_selected_chunks'] is not None and st.button("Genera
             st.write("use edgecase prompt")
             st.session_state['questions_json'] = generate_questions_from_chapter_edgecase(st.session_state['chapter_selected_chunks'], st.session_state['num_questions'])
 
-debug_log(f"Generated Questions: {st.session_state['questions_json']}")
 
 breaks(2)
 st.header("Generated Questions")
@@ -137,29 +136,51 @@ for idx, question_item in enumerate(st.session_state['questions_json']):
         selected = st.checkbox("📌", key=f"select_{idx}")
 
 breaks(2)
-if st.button("Append Selected Questions to Download"):
-        if st.selected_chapter_title not in st.session_state.get('questions_to_download', {}):
-        for idx, question in enumerate(st.session_state.get('questions_json', [])):
-            if st.session_state.get(f"select_{idx}")
-                st.session_state['questions_to_download'][st.selected_chapter_title] = 
+
+debug_log(f"Questions JSON: {st.session_state.get('questions_json', [])}")
+
+col1_download, col2_download, col3_download = st.columns([0.3, 0.3, 0.6])
+with col1_download:
+    if st.button("Sync Selected Questions to Download"):
+        selected_chapter = st.session_state.get('selected_chapter_title')
+        if selected_chapter is None:
+            st.error("No chapter selected!")
+        else:
+            if selected_chapter not in st.session_state['questions_to_download']:
+                st.session_state['questions_to_download'][selected_chapter] = []
+
+            current_selected = st.session_state['questions_to_download'][selected_chapter]
+
+            for idx, question in enumerate(st.session_state.get('questions_json', [])):
+                current_question = {'question': question['question'], 'answer': question['answer']}
+                checkbox_key = f"select_{idx}"
+                is_selected = st.session_state.get(checkbox_key, False)
+
+                if is_selected and current_question not in current_selected:
+                    current_selected.append(current_question)
+                elif not is_selected and current_question in current_selected:
+                    current_selected.remove(current_question)
+
+            st.success(f"Selected questions synced for chapter '{selected_chapter}'.")
+
+with col2_download:
+    if st.button("Clear Selected Questions"):
+        st.session_state['questions_to_download'] = {}
+        st.success("Cleared all selected questions.")
 
 
+# Show what's selected (for testing)
+if st.session_state.questions_to_download:
+    st.markdown("### ✅ Selected Questions")
+    for chapter, questions_list in st.session_state.questions_to_download.items():
+        st.markdown(f"#### {chapter}")
+        for q in questions_list:
+            st.write(q['question'])
 
-
-
-                st.session_state['questions_to_download'][st.selected_chapter_title].append(question)
-        selected_questions[st.selected_chapter_title] = {
-        selected_questions['Questions'] = []
-        for idx, question in enumerate(st.session_state.get('questions_json', [])):
-            if st.session_state.get(f"select_{idx}"):
-                selected_questions.append(question)
-        st.session_state.questions_to_download = selected_questions
-        st.success(f"{len(selected_questions)} questions saved for download!")
 
 
 from docx import Document
 from io import BytesIO
-import streamlit as st
 
 def create_docx_from_data(data):
     doc = Document()
@@ -182,7 +203,7 @@ with st.sidebar:
     st.markdown("---")  # Divider
     st.write("")  # Spacing
 
-    docx_file = create_docx_from_data(questions_data)
+    docx_file = create_docx_from_data(st.session_state.get('questions_to_download', {}))
 
     st.download_button(
         label="📄 Download as Word (.docx)",
@@ -190,11 +211,6 @@ with st.sidebar:
         file_name="questions.docx",
         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 )
-# Show what's selected (for testing)
-if st.session_state.questions_to_download:
-    st.markdown("### ✅ Selected Questions")
-    for q in st.session_state.questions_to_download:
-        st.write(q['question'])
 
 
 # check https://docs.streamlit.io/develop/api-reference/execution-flow/st.form

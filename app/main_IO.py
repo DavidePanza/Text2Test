@@ -24,7 +24,7 @@ DEFAULT_SESSION_STATE = {
     'chapter_prompt': None,
     'questions_json': None,
     'raw_output': None,  # remove this (only for debug)
-    'questions_to_download' : None,
+    'questions_to_download' : {},
 }
 
 
@@ -32,17 +32,17 @@ def initialise_session_state():
     """
     Initializes the session state variables if not already set.
     """
-    for key, _ in DEFAULT_SESSION_STATE.items():
+    for key, default_val in DEFAULT_SESSION_STATE.items():
         if key not in st.session_state:
-            st.session_state[key] = None
+            st.session_state[key] = default_val
 
 
 def reset_session_state_on_upload():
     """
     Resets session state variables to their default values.
     """
-    for key, _ in DEFAULT_SESSION_STATE.items():
-        st.session_state[key] = None
+    for key, default_val in DEFAULT_SESSION_STATE.items():
+        st.session_state[key] = default_val
 
 
 def upload_pdf():
