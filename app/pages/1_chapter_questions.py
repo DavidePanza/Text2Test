@@ -70,6 +70,7 @@ if st.session_state.get('chapters_dict') is not None:
         accept_new_options=False,
     )
 
+    st.selected_chapter_title = options[0]
     st.write(f"Selected chapter: {options[0] if options else 'None'}")
 
 # Get the index of the selected title
@@ -108,15 +109,92 @@ if st.session_state['chapter_selected_chunks'] is not None and st.button("Genera
     # Replace this with your actual question generation function
     with st.spinner("Generating questions..."):
         if len(st.session_state['chapter_selected_chunks']) >= st.session_state['num_questions']:
-            st.session_state['questions_json'] = generate_questions_from_chapter(st.session_state['chapter_selected_chunks'], st.session_state['num_questions'])
+            st.session_state['raw_output'] = generate_questions_from_chapter(st.session_state['chapter_selected_chunks'], st.session_state['num_questions'])
         else:
+            st.write("use edgecase prompt")
             st.session_state['questions_json'] = generate_questions_from_chapter_edgecase(st.session_state['chapter_selected_chunks'], st.session_state['num_questions'])
 
-debug_log(type(st.session_state['questions_json']))
 debug_log(f"Generated Questions: {st.session_state['questions_json']}")
-for question in st.session_state['questions_json']:
-    debug_log(f"Generated Questions: {question}")
 
+breaks(2)
+st.header("Generated Questions")
+breaks(1)
+
+for idx, question_item in enumerate(st.session_state['questions_json']):
+    question_text = question_item['question']
+    answer_text = question_item['answer']
+
+    col1, col2 = st.columns([0.9, 0.1])
+    
+    with col1:
+        st.html(f"<p style='font-size:20px; margin:0;'>{idx+1}. {question_text}</p>")
+        col1_ = st.columns([1, 4])[0]
+        with col1_:
+            with st.expander("💡 Show Answer"):
+                st.write(answer_text)
+
+    with col2:
+        selected = st.checkbox("📌", key=f"select_{idx}")
+
+breaks(2)
+if st.button("Append Selected Questions to Download"):
+        if st.selected_chapter_title not in st.session_state.get('questions_to_download', {}):
+        for idx, question in enumerate(st.session_state.get('questions_json', [])):
+            if st.session_state.get(f"select_{idx}")
+                st.session_state['questions_to_download'][st.selected_chapter_title] = 
+
+
+
+
+
+                st.session_state['questions_to_download'][st.selected_chapter_title].append(question)
+        selected_questions[st.selected_chapter_title] = {
+        selected_questions['Questions'] = []
+        for idx, question in enumerate(st.session_state.get('questions_json', [])):
+            if st.session_state.get(f"select_{idx}"):
+                selected_questions.append(question)
+        st.session_state.questions_to_download = selected_questions
+        st.success(f"{len(selected_questions)} questions saved for download!")
+
+
+from docx import Document
+from io import BytesIO
+import streamlit as st
+
+def create_docx_from_data(data):
+    doc = Document()
+    doc.add_heading("Generated Questions", 0)
+
+    for chapter, qas in data.items():
+        doc.add_heading(chapter, level=1)
+        for idx, qa in enumerate(qas, 1):
+            doc.add_paragraph(f"Q{idx}: {qa['question']}", style='List Number')
+            doc.add_paragraph(f"A: {qa['answer']}", style='Normal')
+            doc.add_paragraph("")  # Spacing
+
+    buffer = BytesIO()
+    doc.save(buffer)
+    buffer.seek(0)
+    return buffer
+
+
+with st.sidebar:
+    st.markdown("---")  # Divider
+    st.write("")  # Spacing
+
+    docx_file = create_docx_from_data(questions_data)
+
+    st.download_button(
+        label="📄 Download as Word (.docx)",
+        data=docx_file,
+        file_name="questions.docx",
+        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+)
+# Show what's selected (for testing)
+if st.session_state.questions_to_download:
+    st.markdown("### ✅ Selected Questions")
+    for q in st.session_state.questions_to_download:
+        st.write(q['question'])
 
 
 # check https://docs.streamlit.io/develop/api-reference/execution-flow/st.form

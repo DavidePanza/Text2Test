@@ -18,10 +18,13 @@ DEFAULT_SESSION_STATE = {
     'chapters_extracted': None,
     'chapters_chunked': None,
     'selected_chapter_idx': None,
+    'selected_chapter_title': None,
     'num_questions': None,
     'chapter_selected_chunks': None,
     'chapter_prompt': None,
-    'questions_json': None
+    'questions_json': None,
+    'raw_output': None,  # remove this (only for debug)
+    'questions_to_download' : None,
 }
 
 
