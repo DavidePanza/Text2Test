@@ -79,3 +79,12 @@ else:
             st.query_params.page = "chapter"
             st.rerun()
 
+
+
+
+txt = st.text_area(
+    "",
+    "Text to analyze It was the best of times, it was the worst of times, it was the age of "
+    "wisdom, it was the age of fool")
+
+st.write(f"You wrote {len(txt)} characters.")

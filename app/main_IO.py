@@ -20,7 +20,8 @@ DEFAULT_SESSION_STATE = {
     'selected_chapter_idx': None,
     'num_questions': None,
     'chapter_selected_chunks': None,
-    'chapter_prompt': None
+    'chapter_prompt': None,
+    'questions_json': None
 }
 
 

@@ -13,3 +13,7 @@ show_pdf_preview()
 
 if st.session_state['uploaded_pdf_bytes'] is not None:
     st.write("You have uploaded a PDF file. You can now generate questions based on the content of the PDF.")
+
+
+# use https://docs.streamlit.io/develop/api-reference/chat/st.chat_input
+# or https://docs.streamlit.io/develop/api-reference/widgets/st.text_input

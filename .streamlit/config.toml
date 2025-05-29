@@ -1,3 +1,7 @@
 # .streamlit/config.toml
+
+primaryColor = "#F63366"
+# backgroundColor = "black"
+
 [theme]
 base = "light"
