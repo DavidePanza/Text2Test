@@ -11,6 +11,7 @@ DEFAULT_SESSION_STATE = {
     'uploaded_pdf_bytes': None,
     'toc_page_range': None,
     'page_range_set' : False,
+    'page_range_updated' : False,
     'toc': None,
     'full_text': None,
     'pages_data_infos': None,

@@ -3,7 +3,7 @@ import json
 from app.utils import *
 from app.main_IO import *
 from app.pages.utils_chapter.page1_utils import *
-from app.pages.utils_chapter.select_toc import page_range_selector
+from app.pages.utils_chapter.select_toc import *
 from app.backend.raw_text_processing import *
 from app.backend.get_requests import extract_chapters_from_toc, generate_questions_from_chapter, generate_questions_from_chapter_edgecase
 from app.backend.text_processing import chapters_chunking
@@ -26,10 +26,41 @@ logging.getLogger().setLevel(getattr(logging, level))
 show_pdf_preview()
 display_scrollable_pages()
 
-# Page range selector for TOC extraction
-page_range_selector()
+# UI and Interaction
+set_clicked, start_page, end_page = page_range_selector_ui()
 
+if set_clicked:
+    updated = handle_page_range_submission(start_page, end_page)
+    st.session_state["page_range_updated"] = updated
+
+if st.session_state.get("page_range_updated", False):
+    extract_content_if_needed()
+    st.session_state["page_range_updated"] = False
+
+# Gate rest of app
 if st.session_state.get("page_range_set", False):
+    # Render rest of app
+    ...
+else:
+    st.info("Please set a valid page range to continue.")
+
+# # Page range selector for TOC extraction
+# page_range_selector()
+
+# if st.session_state.get("page_range_set", False):
+#     if st.session_state.toc is not None and st.session_state.chapters_dict is None:
+#         with st.spinner("Extracting chapters from TOC..."):
+#             extract_chapters_from_toc(st.session_state.toc)
+#             st.success("Chapters extracted successfully.")
+
+#         extract_chapters(st.session_state['chapters_dict'], st.session_state['pages_data_infos'])
+#         try:
+#             debug_log(f"Number of chapters extracted: {len(st.session_state['chapters_extracted'])}")
+#             debug_log(f"First chapter content preview:\n{st.session_state['chapters_extracted'][0]['content'][:1000]}")
+#         except KeyError:
+#             debug_log("'chapters_extracted' not found in session state.")
+#         except IndexError:
+#             debug_log("'chapters_extracted' list is empty.")
 
 # if st.session_state['toc_page_range'] is not None:
 #     debug_log(f"Selected page range: {st.session_state['toc_page_range'][0] + 1} to {st.session_state['toc_page_range'][1] + 1}")
