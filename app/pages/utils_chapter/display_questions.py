@@ -1,22 +1,83 @@
 import streamlit as st
+from app.utils import debug_log
 
 
 def show_questions():
     """
-    Displays the generated questions in a scrollable format.
+    Displays the generated questions in a scrollable container-style format.
     """
-    for idx, question_item in enumerate(st.session_state['questions_json']):
-        question_text = question_item['question']
-        answer_text = question_item['answer']
+    with st.container():
+        st.markdown("### Generated Questions")
+        st.markdown("---")  # Optional visual separator
 
-        col1, col2 = st.columns([0.9, 0.1])
-        
-        with col1:
-            st.html(f"<p style='font-size:20px; margin:0;'>{idx+1}. {question_text}</p>")
-            col1_ = st.columns([1, 4])[0]
-            with col1_:
-                with st.expander("💡 Show Answer"):
-                    st.write(answer_text)
+        for idx, question_item in enumerate(st.session_state['questions_json']):
+            question_text = question_item['question']
+            answer_text = question_item['answer']
 
-        with col2:
-            selected = st.checkbox("📌", key=f"select_{idx}", value=True)
+            col1, col2 = st.columns([0.9, 0.1])
+            
+            with col1:
+                st.html(f"<p style='font-size:18px; margin:0;'>{idx+1}. {question_text}</p>")
+                col1_ = st.columns([2, 3])[0]
+                with col1_:
+                    with st.expander("💡 Show Answer"):
+                        st.write(answer_text)
+
+            with col2:
+                st.checkbox("📌", key=f"select_{idx}", value=True)
+
+            st.markdown("")
+
+
+def sync_selected_questions_to_download():
+    """Syncs checked questions to the download list."""
+    selected_chapter = st.session_state.get('selected_chapter_title')
+    if selected_chapter is None:
+        st.error("No chapter selected!")
+        return
+
+    if selected_chapter not in st.session_state['questions_to_download']:
+        st.session_state['questions_to_download'][selected_chapter] = []
+
+    current_selected = st.session_state['questions_to_download'][selected_chapter]
+
+    for idx, question in enumerate(st.session_state.get('questions_json', [])):
+        current_question = {'question': question['question'], 'answer': question['answer']}
+        checkbox_key = f"select_{idx}"
+        is_selected = st.session_state.get(checkbox_key, False)
+
+        if is_selected and current_question not in current_selected:
+            current_selected.append(current_question)
+        elif not is_selected and current_question in current_selected:
+            current_selected.remove(current_question)
+
+    st.success(f"Selected questions synced for chapter '{selected_chapter}'.")
+
+
+def clear_selected_questions():
+    """Clears all selected questions from session state."""
+    st.session_state['questions_to_download'] = {}
+    st.success("Cleared all selected questions.")
+
+
+def show_download_controls():
+    """Displays buttons to sync or clear selected questions."""
+    col1_download, col2_download, _ = st.columns([0.3, 0.3, 0.4])
+
+    with col1_download:
+        if st.button("Sync Selected Questions to Download"):
+            sync_selected_questions_to_download()
+
+    with col2_download:
+        if st.button("Clear Selected Questions"):
+            clear_selected_questions()
+
+
+def debug_show_selected_questions():
+    """Debug printout of currently selected questions per chapter."""
+    if st.session_state.get('questions_to_download'):
+        debug_log("✅ Selected Questions")
+        for chapter, questions_list in st.session_state['questions_to_download'].items():
+            debug_log(f"{chapter}")
+            for q in questions_list:
+                debug_log(q['question'])

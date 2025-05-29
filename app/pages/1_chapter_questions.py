@@ -5,6 +5,7 @@ from datetime import datetime
 from app.utils import *
 from app.main_IO import *
 from app.pages.utils_chapter.page1_utils import *
+from app.pages.utils_chapter.display_questions import *
 from app.pages.utils_chapter.chapter_extraction import *
 from app.pages.utils_chapter.chapter_selection import *
 from app.backend.raw_text_processing import *
@@ -42,32 +43,14 @@ if st.session_state.get("page_range_set", False):
     # Call the form in your main app code to generate questions
     chapter_question_form()
     debug_log(f"questions: {st.session_state.get('questions_json', 'None')}")
-    breaks(2)
-
-    def show_questions():
-        """
-        Displays the generated questions in a scrollable format.
-        """
-        for idx, question_item in enumerate(st.session_state['questions_json']):
-            question_text = question_item['question']
-            answer_text = question_item['answer']
-
-            col1, col2 = st.columns([0.9, 0.1])
-            
-            with col1:
-                st.html(f"<p style='font-size:20px; margin:0;'>{idx+1}. {question_text}</p>")
-                col1_ = st.columns([1, 4])[0]
-                with col1_:
-                    with st.expander("💡 Show Answer"):
-                        st.write(answer_text)
-
-            with col2:
-                selected = st.checkbox("📌", key=f"select_{idx}", value=True)
+    breaks(2) 
                 
     if st.session_state.get("questions_ready"):
         # Visualize generated questions and store them
         show_questions()
-
+        show_download_controls()
+        debug_show_selected_questions()
+   
 else:
     st.info("Please set a valid page range to continue.")
 
@@ -75,47 +58,47 @@ else:
 
 
 
-# breaks(2)
+# # breaks(2)
 
-# debug_log(f"Questions JSON: {st.session_state.get('questions_json', [])}")
+# # debug_log(f"Questions JSON: {st.session_state.get('questions_json', [])}")
 
-col1_download, col2_download, col3_download = st.columns([0.3, 0.3, 0.6])
-with col1_download:
-    if st.button("Sync Selected Questions to Download"):
-        selected_chapter = st.session_state.get('selected_chapter_title')
-        if selected_chapter is None:
-            st.error("No chapter selected!")
-        else:
-            if selected_chapter not in st.session_state['questions_to_download']:
-                st.session_state['questions_to_download'][selected_chapter] = []
+# col1_download, col2_download, col3_download = st.columns([0.3, 0.3, 0.6])
+# with col1_download:
+#     if st.button("Sync Selected Questions to Download"):
+#         selected_chapter = st.session_state.get('selected_chapter_title')
+#         if selected_chapter is None:
+#             st.error("No chapter selected!")
+#         else:
+#             if selected_chapter not in st.session_state['questions_to_download']:
+#                 st.session_state['questions_to_download'][selected_chapter] = []
 
-            current_selected = st.session_state['questions_to_download'][selected_chapter]
+#             current_selected = st.session_state['questions_to_download'][selected_chapter]
 
-            for idx, question in enumerate(st.session_state.get('questions_json', [])):
-                current_question = {'question': question['question'], 'answer': question['answer']}
-                checkbox_key = f"select_{idx}"
-                is_selected = st.session_state.get(checkbox_key, False)
+#             for idx, question in enumerate(st.session_state.get('questions_json', [])):
+#                 current_question = {'question': question['question'], 'answer': question['answer']}
+#                 checkbox_key = f"select_{idx}"
+#                 is_selected = st.session_state.get(checkbox_key, False)
 
-                if is_selected and current_question not in current_selected:
-                    current_selected.append(current_question)
-                elif not is_selected and current_question in current_selected:
-                    current_selected.remove(current_question)
+#                 if is_selected and current_question not in current_selected:
+#                     current_selected.append(current_question)
+#                 elif not is_selected and current_question in current_selected:
+#                     current_selected.remove(current_question)
 
-            st.success(f"Selected questions synced for chapter '{selected_chapter}'.")
+#             st.success(f"Selected questions synced for chapter '{selected_chapter}'.")
 
-with col2_download:
-    if st.button("Clear Selected Questions"):
-        st.session_state['questions_to_download'] = {}
-        st.success("Cleared all selected questions.")
+# with col2_download:
+#     if st.button("Clear Selected Questions"):
+#         st.session_state['questions_to_download'] = {}
+#         st.success("Cleared all selected questions.")
 
 
-# Show what's selected (for testing)
-if st.session_state.questions_to_download:
-    st.markdown("### ✅ Selected Questions")
-    for chapter, questions_list in st.session_state.questions_to_download.items():
-        st.markdown(f"#### {chapter}")
-        for q in questions_list:
-            st.write(q['question'])
+# # Show what's selected (for testing)
+# if st.session_state.questions_to_download:
+#     st.markdown("### ✅ Selected Questions")
+#     for chapter, questions_list in st.session_state.questions_to_download.items():
+#         st.markdown(f"#### {chapter}")
+#         for q in questions_list:
+#             st.write(q['question'])
 
 
 
