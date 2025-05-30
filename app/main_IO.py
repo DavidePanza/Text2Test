@@ -33,11 +33,13 @@ DEFAULT_SESSION_STATE = {
 
     # Topics
     'query': None,
+    'questions_ready_topic': False,
 
     # Questions
-    'questions_json': None,
+    'questions_dict_chapter': None,
+    'questions_dict_topic': None,
     'raw_output': None,  # remove this (only for debug)
-    'questions_ready': False,
+    'questions_ready_chapter': False,
     'questions_to_download' : {}
 }
 
@@ -56,7 +58,8 @@ def reset_session_state_on_upload():
     Resets session state variables to their default values.
     """
     for key, default_val in DEFAULT_SESSION_STATE.items():
-        st.session_state[key] = default_val
+        if key != 'questions_to_download':
+            st.session_state[key] = default_val
 
 
 def upload_pdf():

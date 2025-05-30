@@ -81,9 +81,10 @@ def chapter_question_form():
             chunks = st.session_state.get('chapter_selected_chunks', [])
             with st.spinner("✨ Thinking..."):
                 if len(chunks) >= num_questions:
-                    generate_questions_from_chapter(chunks, num_questions)
+                    generated_questions = generate_questions_from_chapter(chunks, num_questions)
                 else:
                     st.info("Using edge-case strategy: fewer chunks than questions.")
-                    generate_questions_from_chapter_edgecase(chunks, num_questions)
+                    generated_questions = generate_questions_from_chapter_edgecase(chunks, num_questions)
 
-                st.session_state['questions_ready'] = True 
+                st.session_state['questions_ready_chapter'] = True 
+                return generated_questions

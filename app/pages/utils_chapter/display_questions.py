@@ -2,15 +2,18 @@ import streamlit as st
 from app.utils import debug_log
 
 
-def show_questions():
+def show_questions(questons_to_show):
     """
     Displays the generated questions in a scrollable container-style format.
     """
     with st.container():
         st.markdown("### Generated Questions")
         st.markdown("---")  # Optional visual separator
-
-        for idx, question_item in enumerate(st.session_state['questions_json']):
+        if not questons_to_show:
+            debug_log("No questions to display.")
+            return
+    
+        for idx, question_item in enumerate(questons_to_show):
             question_text = question_item['question']
             answer_text = question_item['answer']
 
@@ -29,19 +32,18 @@ def show_questions():
             st.markdown("")
 
 
-def sync_selected_questions_to_download(selected_input):
+def sync_selected_questions_to_download(chapter_or_query, questions_dict):
     """Syncs checked questions to the download list."""
-    selected_input = selected_input
-    if selected_input is None:
+    if chapter_or_query is None:
         st.error("No chapter or query selected!")
         return
 
-    if selected_input not in st.session_state['questions_to_download']:
-        st.session_state['questions_to_download'][selected_input] = []
+    if chapter_or_query not in st.session_state['questions_to_download']:
+        st.session_state['questions_to_download'][chapter_or_query] = []
 
-    current_selected = st.session_state['questions_to_download'][selected_input]
+    current_selected = st.session_state['questions_to_download'][chapter_or_query]
 
-    for idx, question in enumerate(st.session_state.get('questions_json', [])):
+    for idx, question in enumerate(questions_dict):
         current_question = {'question': question['question'], 'answer': question['answer']}
         checkbox_key = f"select_{idx}"
         is_selected = st.session_state.get(checkbox_key, False)
@@ -51,7 +53,7 @@ def sync_selected_questions_to_download(selected_input):
         elif not is_selected and current_question in current_selected:
             current_selected.remove(current_question)
 
-    st.success(f"Selected questions synced for chapter or query '{selected_input}'.")
+    st.success(f"Selected questions synced for chapter or query '{chapter_or_query}'.")
 
 
 def clear_selected_questions():
@@ -60,13 +62,13 @@ def clear_selected_questions():
     st.success("Cleared all selected questions.")
 
 
-def show_download_controls(selected_input):
+def show_download_controls(chapter_or_query, questions_dict):
     """Displays buttons to sync or clear selected questions."""
     col1_download, col2_download, _ = st.columns([0.3, 0.3, 0.4])
 
     with col1_download:
         if st.button("Sync Selected Questions to Download"):
-            sync_selected_questions_to_download(selected_input)
+            sync_selected_questions_to_download(chapter_or_query, questions_dict)
 
     with col2_download:
         if st.button("Clear Selected Questions"):

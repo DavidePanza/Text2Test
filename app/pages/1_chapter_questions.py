@@ -14,8 +14,11 @@ st.title("Generate Questions from a Chapter")
 st.write("Here, you can generate questions based on a specific chapter.")
 
 # Set up logger
-level = st.selectbox("Logging level", ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"])
-logging.getLogger().setLevel(getattr(logging, level))
+if st.session_state.use_logger: 
+    level = st.selectbox("Logging level", ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"])
+    logging.getLogger().setLevel(getattr(logging, level))
+else:
+    logging.getLogger().setLevel(logging.CRITICAL + 1)
 
 # Display the page range selector
 display_scrollable_pages()
@@ -35,22 +38,24 @@ if st.session_state.get("page_range_updated", False):
 if st.session_state.get("page_range_set", False):
 
     # Call the form in your main app code to generate questions
-    chapter_question_form()
-    debug_log(f"questions: {st.session_state.get('questions_json', 'None')}")
+    result = chapter_question_form()
+    if result:
+        st.session_state.questions_dict_chapter = result
+    debug_log(f"questions: {st.session_state.get('questions_dict_chapter', 'None')}")
     breaks(2) 
-                
-    if st.session_state.get("questions_ready"):
+    
+    if st.session_state.get("questions_ready_chapter"):
         # Visualize generated questions and store them
-        show_questions()
+        show_questions(st.session_state.get('questions_dict_chapter'))
         st.markdown("---")
-        show_download_controls(st.session_state.get('selected_chapter_title', None))
+        show_download_controls(st.session_state.get('selected_chapter_title'), st.session_state.get('questions_dict_chapter', 'None'))
         debug_show_selected_questions()
-   
+
         with st.sidebar:
             st.markdown("---")  # Divider
             st.write("Download Questions")  # Spacing
 
-            docx_file = create_docx_from_data(st.session_state.get('questions_to_download', {}))
+            docx_file = create_docx_from_data(st.session_state['questions_to_download'])
 
             st.download_button(
                 label="📄 Download as Word (.docx)",

@@ -17,8 +17,9 @@ def generate_questions_from_chapter(chunks, num_questions, max_questions=5):
     print("use prompt optimized for gemma3")
     raw_output = run_prompt(prompt)
     try:
-        st.session_state['questions_json'] = clean_and_parse_json(raw_output)
+        generated_questions = clean_and_parse_json(raw_output)
         st.success("Questions generated successfully!")
+        return generated_questions
     except:
         print("Error parsing JSON")
 
@@ -29,7 +30,8 @@ def generate_questions_from_chapter_edgecase(chunks, num_questions, max_question
     print("use prompt optimized for gemma3")
     raw_output = run_prompt(prompt)
     try:
-        st.session_state['questions_json'] = clean_and_parse_json(raw_output)
+        generated_questions = clean_and_parse_json(raw_output)
         st.success("Questions generated successfully!")
+        return generated_questions
     except:
         print("Error parsing JSON")

@@ -16,9 +16,10 @@ st.title("Generate Questions on a Topic")
 st.write("Here, you can generate questions based on a specific topic.")
 
 # Set up logger
-level = st.selectbox("Logging level", ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"])
-logging.getLogger().setLevel(getattr(logging, level))
-
+if st.session_state.use_logger: 
+    level = st.selectbox("Logging level", ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"])
+    logging.getLogger().setLevel(getattr(logging, level))
+    
 if st.session_state['uploaded_pdf_bytes'] is not None:
     st.write("You have uploaded a PDF file. You can now generate questions based on the content of the PDF.")
 
@@ -47,17 +48,17 @@ with st.form("query_form"):
             query_context = query_collection(whole_text_collection, query=query, nresults=3, context_multiplier=2)
             prompt = book_prompt(query_context, num_questions=3, user_query=query)
             questions_json = run_prompt(prompt)
-            st.session_state.questions_json = clean_and_parse_json(questions_json)
+            st.session_state.questions_dict_topic = clean_and_parse_json(questions_json)
             st.session_state['query'] = query
-            st.session_state['questions_ready'] = True
+            st.session_state['questions_ready_topic'] = True
 
-if st.session_state.get("questions_ready"):
-    debug_log(f"Generated questions: {st.session_state.get('questions_json', 'None')}")
+if st.session_state.get("questions_ready_topic"):
+    debug_log(f"Generated questions: {st.session_state.get('questions_dict_topic', 'None')}")
 
     # Visualize generated questions and store them
-    show_questions()
+    show_questions(st.session_state['questions_dict_topic'])
     st.markdown("---")
-    show_download_controls(st.session_state['query'])
+    show_download_controls(st.session_state.get('query'), st.session_state.get('questions_dict_topic', 'None'))
     debug_show_selected_questions()
 
     with st.sidebar:
