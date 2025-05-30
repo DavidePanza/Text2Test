@@ -29,17 +29,17 @@ def show_questions():
             st.markdown("")
 
 
-def sync_selected_questions_to_download():
+def sync_selected_questions_to_download(selected_input):
     """Syncs checked questions to the download list."""
-    selected_chapter = st.session_state.get('selected_chapter_title')
-    if selected_chapter is None:
-        st.error("No chapter selected!")
+    selected_input = selected_input
+    if selected_input is None:
+        st.error("No chapter or query selected!")
         return
 
-    if selected_chapter not in st.session_state['questions_to_download']:
-        st.session_state['questions_to_download'][selected_chapter] = []
+    if selected_input not in st.session_state['questions_to_download']:
+        st.session_state['questions_to_download'][selected_input] = []
 
-    current_selected = st.session_state['questions_to_download'][selected_chapter]
+    current_selected = st.session_state['questions_to_download'][selected_input]
 
     for idx, question in enumerate(st.session_state.get('questions_json', [])):
         current_question = {'question': question['question'], 'answer': question['answer']}
@@ -51,7 +51,7 @@ def sync_selected_questions_to_download():
         elif not is_selected and current_question in current_selected:
             current_selected.remove(current_question)
 
-    st.success(f"Selected questions synced for chapter '{selected_chapter}'.")
+    st.success(f"Selected questions synced for chapter or query '{selected_input}'.")
 
 
 def clear_selected_questions():
@@ -60,13 +60,13 @@ def clear_selected_questions():
     st.success("Cleared all selected questions.")
 
 
-def show_download_controls():
+def show_download_controls(selected_input):
     """Displays buttons to sync or clear selected questions."""
     col1_download, col2_download, _ = st.columns([0.3, 0.3, 0.4])
 
     with col1_download:
         if st.button("Sync Selected Questions to Download"):
-            sync_selected_questions_to_download()
+            sync_selected_questions_to_download(selected_input)
 
     with col2_download:
         if st.button("Clear Selected Questions"):

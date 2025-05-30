@@ -5,17 +5,22 @@ import io
 
 
 DEFAULT_SESSION_STATE = {
+    # PDF Upload
     'doc': None,
-    'page_choice': None,
     'uploaded_pdf_name': None,
     'pdf_changed': False,
     'uploaded_pdf_bytes': None,
-    'toc_page_range': None,
     'page_range_set' : False,
     'page_range_updated' : False,
-    'toc': None,
     'full_text': None,
     'pages_data_infos': None,
+
+    # TOC
+    'page_choice': None,
+    'toc_page_range': None,
+    'toc': None,
+
+    # Chapters
     'chapters_starting_page': None,
     'chapters_dict': None,
     'chapters_extracted': None,
@@ -25,6 +30,11 @@ DEFAULT_SESSION_STATE = {
     'num_questions': None,
     'chapter_selected_chunks': None,
     'chapter_prompt': None,
+
+    # Topics
+    'query': None,
+
+    # Questions
     'questions_json': None,
     'raw_output': None,  # remove this (only for debug)
     'questions_ready': False,

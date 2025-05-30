@@ -4,6 +4,9 @@ from app.utils import *
 from app.main_IO import *
 from app.pages.utils_chapter.display_questions import *
 from app.pages.utils_chapter.download_questions import create_docx_from_data
+from app.backend.chunks_processing import query_collection
+from app.backend.messages_templates import book_prompt
+from app.backend.runpod_client import run_prompt, clean_and_parse_json
 
 
 # Initialise
@@ -38,12 +41,46 @@ with st.form("query_form"):
     query = st.text_input("Enter your query:")
     submitted = st.form_submit_button("Submit")
 
-if submitted and query:
-    st.write(f"You asked: {query}")
+    if submitted and query:
+        with st.spinner("Generating questions..."):
+            # Generate questions based on the query
+            query_context = query_collection(whole_text_collection, query=query, nresults=3, context_multiplier=2)
+            prompt = book_prompt(query_context, num_questions=3, user_query=query)
+            questions_json = run_prompt(prompt)
+            st.session_state.questions_json = clean_and_parse_json(questions_json)
+            st.session_state['query'] = query
+            st.session_state['questions_ready'] = True
 
-    query_context = query_collection(whole_text_collection, query=query, nresults=3, context_multiplier=2)
-    out3 = book_prompt(query_context, num_questions=3, user_query=query)
-    questions = run_prompt(out)
+if st.session_state.get("questions_ready"):
+    debug_log(f"Generated questions: {st.session_state.get('questions_json', 'None')}")
+
+    # Visualize generated questions and store them
+    show_questions()
+    st.markdown("---")
+    show_download_controls(st.session_state['query'])
+    debug_show_selected_questions()
+
+    with st.sidebar:
+        st.markdown("---")  # Divider
+        st.write("Download Questions")  # Spacing
+
+        docx_file = create_docx_from_data(st.session_state.get('questions_to_download', {}))
+
+        st.download_button(
+            label="📄 Download as Word (.docx)",
+            data=docx_file,
+            file_name="questions.docx",
+            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            on_click="ignore"
+        )
+
+
+
+
+        # query_context = query_collection(whole_text_collection, query=query, nresults=3, context_multiplier=2)
+        # out3 = book_prompt(query_context, num_questions=3, user_query=query)
+        # questions = run_prompt(out)
+
 
 # use https://docs.streamlit.io/develop/api-reference/chat/st.chat_input
 # or https://docs.streamlit.io/develop/api-reference/widgets/st.text_input

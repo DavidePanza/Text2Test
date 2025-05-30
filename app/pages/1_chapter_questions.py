@@ -43,7 +43,7 @@ if st.session_state.get("page_range_set", False):
         # Visualize generated questions and store them
         show_questions()
         st.markdown("---")
-        show_download_controls()
+        show_download_controls(st.session_state.get('selected_chapter_title', None))
         debug_show_selected_questions()
    
         with st.sidebar:
