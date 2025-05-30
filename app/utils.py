@@ -11,6 +11,30 @@ def configure_page() -> None:
                        page_icon=":book:")
 
 
+def apply_style():
+    st.markdown("""
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Work+Sans&display=swap');
+
+    html, body, .stApp,
+    .css-1v3fvcr, .css-ffhzg2, .css-1d391kg,
+    div[data-testid="stMarkdownContainer"],
+    div[data-testid="stText"],
+    div[data-testid="stTextInput"],
+    div[data-testid="stSelectbox"],
+    div[data-testid="stCheckbox"],
+    div[data-testid="stSlider"],
+    label, input, textarea, button, select,
+    .stButton, .stTextInput > div, .stMarkdown, .stCaption,
+    .streamlit-expanderHeader, .st-expander > div,
+    h1, h2, h3, h4, h5, h6,
+    .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 {
+        font-family: 'Work Sans', sans-serif !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+
 def breaks(n=1):
     """
     Creates a line break.

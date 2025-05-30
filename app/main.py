@@ -15,6 +15,8 @@ if root_path not in sys.path:
 # Configuration
 configure_page()
 initialise_session_state()
+apply_style()
+
 
 level = st.selectbox("Logging level", ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"])
 logging.getLogger().setLevel(getattr(logging, level))
@@ -32,23 +34,36 @@ elif st.query_params.page == "inspect":
     st.switch_page("pages/3_inspect_pdf.py")
 else:
     # Welcome message
-    st.title("Welcome to Test2Test!")
+    st.title("Welcome to Text2Test!")
     st.write("This app helps you generate questions from text documents or specific topics.")
 
     # Upload PDF file
     upload_pdf()
+    debug_log(f'1 book title: {st.session_state.get("uploaded_pdf_name", "No title")}')
 
     if st.session_state.get("uploaded_pdf_bytes") is not None and st.session_state.get("full_text") is None:
         process_pdf() # maybe combine this with the upload_pdf function
         st.session_state["pages_data_infos"] = st.session_state["pages_data_infos"][st.session_state["chapters_starting_page"]:]
-
+        debug_log(f'2 book title: {st.session_state.get("uploaded_pdf_name", "No title")}')
     try:
-        st.info(st.session_state['uploaded_pdf_name'])      
+        st.info(st.session_state['uploaded_pdf_name'])  
+        debug_log(f'3 book title: {st.session_state.get("uploaded_pdf_name", "No title")}')    
         st.write(f'{st.session_state["full_text"][:200]}') # remove this
         show_pdf_preview()
     except:
+
         pass
     
+    # if st.session_state.full_text is not None and :
+    #     # Set up Chroma and create Collection
+    #     EMBEDDING_MODEL = "all-MiniLM-L6-v2"  
+    #     client, embedding_func = initialize_chromadb(EMBEDDING_MODEL)
+
+    #     # Create two collections with different purposes
+    #     whole_text_collection = initialize_collection(client, embedding_func, "whole_text_chunks")
+    #     update_collection(whole_text_collection, text, max_words=200, min_words=100, overlap_sentences=3)
+
+
     breaks(2)
 
     # Main content buttons

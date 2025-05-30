@@ -48,28 +48,36 @@ def reset_session_state_on_upload():
         st.session_state[key] = default_val
 
 
+
+
+
+
+
+
+
 def upload_pdf():
     st.write("Please upload a textbook in PDF format:")
     uploaded_file = st.file_uploader("Upload PDF", type=["pdf"])
     
     if uploaded_file is not None:
-
-        # Reset session state if a new file is uploaded
-        if uploaded_file.name != st.session_state.get('uploaded_pdf_name'):
+        prev_file = st.session_state.get('uploaded_pdf_name')
+        if uploaded_file.name != prev_file:
+            # New file detected
             reset_session_state_on_upload()
+            st.session_state['pdf_changed'] = True
+        else:
+            st.session_state['pdf_changed'] = False
 
-        # Read the uploaded file
         pdf_bytes = uploaded_file.read()
 
         if pdf_bytes:
-            st.session_state['uploaded_pdf_bytes'] = pdf_bytes  # match your earlier keys
+            st.session_state['uploaded_pdf_bytes'] = pdf_bytes
             st.session_state['uploaded_pdf_name'] = uploaded_file.name
             st.success(f"File '{uploaded_file.name}' uploaded successfully!")
         else:
             st.error("Uploaded file is empty!")
                 
     elif uploaded_file is None and st.session_state.get('uploaded_pdf_bytes') is not None:
-        # File already uploaded, so just confirm
         st.success("File uploaded successfully!")
     else:
         st.info("Please upload a PDF file to proceed.")

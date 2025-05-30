@@ -96,18 +96,11 @@ def process_pdf():
         return
 
     with st.spinner("Processing uploaded file..."):
-        pdf_bytes = st.session_state.get("uploaded_pdf_bytes")
-        if pdf_bytes is None:
-            st.error("No PDF uploaded.")
-            return
-
         with fitz.open(stream=pdf_bytes, filetype="pdf") as doc:
-            # Extract data once
             pages_data_infos = extract_page_data_fitz(doc)
             chapters_starting_page = correct_page_numbers(pages_data_infos)
             full_text = extract_text(doc, chapters_starting_page)
 
-        # Store results
         st.session_state['full_text'] = full_text
         st.session_state['pages_data_infos'] = pages_data_infos
         st.session_state['chapters_starting_page'] = chapters_starting_page
