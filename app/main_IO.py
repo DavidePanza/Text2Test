@@ -63,8 +63,7 @@ def reset_session_state_on_upload():
 
 
 def upload_pdf():
-    st.write("Please upload a textbook in PDF format:")
-    uploaded_file = st.file_uploader("Upload PDF", type=["pdf"])
+    uploaded_file = st.file_uploader("", type=["pdf"])
     
     if uploaded_file is not None:
         prev_file = st.session_state.get('uploaded_pdf_name')

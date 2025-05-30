@@ -35,20 +35,17 @@ def select_num_questions():
 
 def chapter_question_form():
     with st.form("chapter_question_form"):
-        st.html("""
-        <style>
-            .range-header {
-                margin-bottom: 0.5rem;
-            }
-        </style>
-        """)
-        st.html('<h3 class="range-header">Select Chapter</h3>')
+        st.subheader("Chapter Selection")
+        breaks(1)
         chapters = st.session_state.get('chapters_dict', [])
         chapter_titles = get_chapter_titles(chapters)
 
         options = select_chapter(chapter_titles)
-        num_questions = select_num_questions()
+        col1, _ = st.columns([2, 6])
+        with col1:
+            num_questions = select_num_questions()
 
+        breaks(1)
         submitted = st.form_submit_button("Generate Questions")
 
         if submitted:

@@ -1,6 +1,7 @@
 import streamlit as st
 from utils import *
 from main_IO import *
+from download_questions import create_docx_from_data
 from backend.raw_text_processing import *
 from backend.chromadb_utils import *
 import os
@@ -17,6 +18,13 @@ if root_path not in sys.path:
 configure_page()
 initialise_session_state()
 apply_style()
+
+# add_sidebar_header()
+st.sidebar.html("""
+<div style='position: fixed; top: 10px; left: 20px; z-index: 999; padding: 10px;'>
+    <h3>Menu</h3>
+</div>
+""")
 
 # Initialize chromadb variables
 EMBEDDING_MODEL = "all-MiniLM-L6-v2"
@@ -42,10 +50,23 @@ elif st.query_params.page == "inspect":
 else:
     # Welcome message
     st.title("Welcome to Text2Test!")
-    st.write("This app helps you generate questions from text documents or specific topics.")
+    st.divider()
+    st.markdown("""
+    Welcome! This app helps you transform your PDFs or texts into interactive study materials by generating meaningful questions.  
+    You can either:
+
+    - Generate questions based on specific topics or keywords
+    - Generate questions from a selected chapter
+
+    Start by uploading your PDF file, then choose your preferred way to generate questions using the options below.  
+    Let’s make studying smarter and more engaging!
+    """)
+    st.divider()
 
     # Upload PDF file
+    st.subheader("Upload your PDF file")
     upload_pdf()
+    st.divider()
 
     # Check if PDF has changed or needs processing
     if st.session_state.get("pdf_changed") or (
@@ -72,33 +93,51 @@ else:
             st.info(f"Uploaded PDF: {uploaded_pdf_name}")
             debug_log(f"book title: {uploaded_pdf_name}")
         else:
-            st.info("No PDF uploaded yet.")
-
-        # Optionally remove or comment this line if no longer needed
-        # st.write(st.session_state.get("full_text", "")[:200])
+            pass
 
         show_pdf_preview()
 
     except Exception as e:
         debug_log(f"Error displaying PDF info or preview: {e}")
 
-    breaks(2)
-
     # Main content buttons
+    st.subheader("Generate Questions")
     st.write("Please choose an option to generate questions:")
+    breaks(1)  
     cols = st.columns(2)
     st.html("""
     <style>
-    div.stButton > button:first-child {
-        width: 100%;
-        padding: 30px 0;
-        font-size: 20px;
-        background-color: #cce5ff;
-        border-radius: 10px;
-        border: 2px solid #339af0;
+    div.stButton {
+        display: flex;
+        justify-content: center;
+        margin: 10px 0;
     }
+
+    div.stButton > button:first-child {
+        width: 80%;
+        padding: 40px 0;
+        background-color: #f0f0f0 !important;
+        border: none !important;
+        border-radius: 10px !important;
+        color: #333 !important;
+        font-family: 'Work Sans', sans-serif !important;
+        font-weight: 600 !important;
+        transition: all 0.3s ease;
+    }
+
+    /* Target the button text directly */
+    div.stButton > button:first-child p,
+    div.stButton > button:first-child span,
+    div.stButton > button:first-child div,
+    div.stButton > button:first-child {
+        font-size: 24px !important;
+        line-height: 1.2 !important;
+    }
+
     div.stButton > button:first-child:hover {
-        background-color: #99ccff;
+        background-color: #e0e0e0 !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
     </style>
     """)
@@ -112,12 +151,20 @@ else:
             st.query_params.page = "chapter"
             st.rerun()
 
+    if st.session_state.get('questions_to_download'): 
+        with st.sidebar:
+            st.markdown("---")  # Divider
+            st.markdown("**Download Questions**")  # Spacing
 
+            docx_file = create_docx_from_data(st.session_state.get('questions_to_download', {}))
 
-
-txt = st.text_area(
-    "",
-    "Text to analyze It was the best of times, it was the worst of times, it was the age of "
-    "wisdom, it was the age of fool")
-
-st.write(f"You wrote {len(txt)} characters.")
+            st.download_button(
+                label="📄 Download as Word (.docx)",
+                data=docx_file,
+                file_name="questions.docx",
+                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                on_click="ignore"
+            )
+    else:
+        with st.sidebar:
+            st.markdown("---")

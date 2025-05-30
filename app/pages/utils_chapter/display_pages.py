@@ -8,10 +8,7 @@ def display_scrollable_pages():
         pdf_document = None
         try:
             pdf_document = fitz.open(stream=st.session_state.get("uploaded_pdf_bytes"), filetype="pdf")
-
-            st.write("To generate questions from a chapter, please select the page range in which the Table Of Content is included.")
-            st.write("This is important to automatically identify the chapter you want to generate questions from.")
-
+            
             # CSS styles
             css = """ 
             <style>

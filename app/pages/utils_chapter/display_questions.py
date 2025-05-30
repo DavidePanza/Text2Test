@@ -7,8 +7,6 @@ def show_questions(questons_to_show):
     Displays the generated questions in a scrollable container-style format.
     """
     with st.container():
-        st.markdown("### Generated Questions")
-        st.markdown("---")  # Optional visual separator
         if not questons_to_show:
             debug_log("No questions to display.")
             return
@@ -67,6 +65,32 @@ def show_download_controls(chapter_or_query, questions_dict):
     col1_download, col2_download, _ = st.columns([0.3, 0.3, 0.4])
 
     with col1_download:
+        st.html("""
+        <style>
+        /* Style for all buttons or target specific ones */
+        div.stButton > button:first-child {
+            background-color: #f0f0f0 !important;
+            border: none !important;
+            border-radius: 8px !important;
+            color: #333 !important;
+            font-family: 'Work Sans', sans-serif !important;
+            font-weight: 500 !important;
+            padding: 0.5rem 1rem !important;
+            transition: all 0.2s ease !important;
+        }
+
+        div.stButton > button:first-child:hover {
+            background-color: #e0e0e0 !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+        }
+
+        div.stButton > button:first-child:active {
+            transform: translateY(0px) !important;
+            background-color: #d0d0d0 !important;
+        }
+        </style>
+        """)
         if st.button("Sync Selected Questions to Download"):
             sync_selected_questions_to_download(chapter_or_query, questions_dict)
 

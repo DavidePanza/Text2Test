@@ -1,5 +1,5 @@
 import streamlit as st
-from app.utils import debug_log
+from app.utils import debug_log, breaks
 from app.backend.get_requests import extract_chapters_from_toc
 from app.backend.raw_text_processing import extract_toc, extract_chapters
 from app.backend.text_processing import chapters_chunking
@@ -7,15 +7,8 @@ from app.backend.text_processing import chapters_chunking
 
 def page_range_selector_ui():
     with st.container(border=True):
-        st.html("""
-        <style>
-            .range-header {
-                margin-bottom: 0.5rem;
-            }
-        </style>
-        """)
-        st.html('<h3 class="range-header">Select Page Range</h3>')
-
+        st.subheader("Page Range Selection")
+        breaks(1)
         col1, col2, _, col4 = st.columns([1, 1, 1, 1])
 
         with col1:
