@@ -2,6 +2,7 @@ import streamlit as st
 from utils import *
 from main_IO import *
 from backend.raw_text_processing import *
+from backend.chromadb_utils import *
 import os
 import sys
 import logging
@@ -17,7 +18,11 @@ configure_page()
 initialise_session_state()
 apply_style()
 
+# Initialize chromadb variables
+EMBEDDING_MODEL = "all-MiniLM-L6-v2"
+model_path = "./chromadb_model"
 
+# Set-up Logger
 level = st.selectbox("Logging level", ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"])
 logging.getLogger().setLevel(getattr(logging, level))
 
@@ -39,30 +44,41 @@ else:
 
     # Upload PDF file
     upload_pdf()
-    debug_log(f'1 book title: {st.session_state.get("uploaded_pdf_name", "No title")}')
 
-    if st.session_state.get("uploaded_pdf_bytes") is not None and st.session_state.get("full_text") is None:
-        process_pdf() # maybe combine this with the upload_pdf function
-        st.session_state["pages_data_infos"] = st.session_state["pages_data_infos"][st.session_state["chapters_starting_page"]:]
-        debug_log(f'2 book title: {st.session_state.get("uploaded_pdf_name", "No title")}')
+    # Check if PDF has changed or needs processing
+    if st.session_state.get("pdf_changed") or (
+        st.session_state.get("full_text") is None and 
+        st.session_state.get("uploaded_pdf_bytes") is not None
+    ):
+        process_pdf()  # Extract text from PDF
+
+        with st.spinner("Extracting information from the text..."):
+            client, embedding_func = initialize_chromadb(EMBEDDING_MODEL)  
+            whole_text_collection = initialize_collection(client, embedding_func, "whole_text_chunks")  
+            update_collection(
+                whole_text_collection, 
+                st.session_state.get("full_text"), 
+                max_words=200, 
+                min_words=100, 
+                overlap_sentences=3
+            )
+            st.session_state["pdf_changed"] = False  # Reset flag after processing
+
     try:
-        st.info(st.session_state['uploaded_pdf_name'])  
-        debug_log(f'3 book title: {st.session_state.get("uploaded_pdf_name", "No title")}')    
-        st.write(f'{st.session_state["full_text"][:200]}') # remove this
+        uploaded_pdf_name = st.session_state.get('uploaded_pdf_name', None)
+        if uploaded_pdf_name:
+            st.info(f"Uploaded PDF: {uploaded_pdf_name}")
+            debug_log(f"book title: {uploaded_pdf_name}")
+        else:
+            st.info("No PDF uploaded yet.")
+
+        # Optionally remove or comment this line if no longer needed
+        # st.write(st.session_state.get("full_text", "")[:200])
+
         show_pdf_preview()
-    except:
 
-        pass
-    
-    # if st.session_state.full_text is not None and :
-    #     # Set up Chroma and create Collection
-    #     EMBEDDING_MODEL = "all-MiniLM-L6-v2"  
-    #     client, embedding_func = initialize_chromadb(EMBEDDING_MODEL)
-
-    #     # Create two collections with different purposes
-    #     whole_text_collection = initialize_collection(client, embedding_func, "whole_text_chunks")
-    #     update_collection(whole_text_collection, text, max_words=200, min_words=100, overlap_sentences=3)
-
+    except Exception as e:
+        debug_log(f"Error displaying PDF info or preview: {e}")
 
     breaks(2)
 

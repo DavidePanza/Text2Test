@@ -1,19 +1,22 @@
 import chromadb
 from chromadb.utils import embedding_functions
-from text_processing import text_chunking
+from .text_processing import text_chunking
 
 
-def initialize_chromadb(EMBEDDING_MODEL):
+def initialize_chromadb(EMBEDDING_MODEL, local_model_path=None):
     """
-    Initialize ChromaDB client and embedding function.
+    Initialize ChromaDB client and embedding function, using a local model path if provided.
     """
-    # Create a ephemeral directory for storing the database
     client = chromadb.Client()
 
-    # Initialize an embedding function (using a Sentence Transformer model)
-    embedding_func = embedding_functions.SentenceTransformerEmbeddingFunction(
-        model_name=EMBEDDING_MODEL
-    )
+    if local_model_path:
+        embedding_func = embedding_functions.SentenceTransformerEmbeddingFunction(
+            model_name=local_model_path
+        )
+    else:
+        embedding_func = embedding_functions.SentenceTransformerEmbeddingFunction(
+            model_name=EMBEDDING_MODEL
+        )
 
     return client, embedding_func
 

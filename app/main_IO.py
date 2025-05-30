@@ -8,6 +8,7 @@ DEFAULT_SESSION_STATE = {
     'doc': None,
     'page_choice': None,
     'uploaded_pdf_name': None,
+    'pdf_changed': False,
     'uploaded_pdf_bytes': None,
     'toc_page_range': None,
     'page_range_set' : False,
@@ -46,13 +47,6 @@ def reset_session_state_on_upload():
     """
     for key, default_val in DEFAULT_SESSION_STATE.items():
         st.session_state[key] = default_val
-
-
-
-
-
-
-
 
 
 def upload_pdf():
