@@ -18,8 +18,8 @@ RUN ollama serve & \
     killall ollama
 
 # Install Python packages
-COPY requirements.txt /requirements.txt
-RUN pip3 install --no-cache-dir -r /requirements.txt
+COPY requirements_runpod.txt /requirements_rundpod.txt
+RUN pip3 install --no-cache-dir -r /requirements_runpod.txt
 
 # Create app directory
 WORKDIR /app
