@@ -1,6 +1,12 @@
 # .streamlit/config.toml
 
-primaryColor = "#F63366"
+[server]
+headless = true
+port = 8501
+enableCORS = false
+
+[global]
+clientStorageFolder = "/app/.streamlit"
 
 [theme]
 base = "light"

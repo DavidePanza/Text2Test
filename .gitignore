@@ -3,4 +3,5 @@ data/
 backup/
 .env
 plan.md
+nltk_data/
 notebooks/database/
