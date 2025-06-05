@@ -1,16 +1,16 @@
 FROM nvidia/cuda:12.1.1-runtime-ubuntu22.04
 
-# Install dependencies and Ollama in one layer
+# Split into separate layers
 RUN apt-get update && apt-get install -y \
     python3 \
     python3-pip \
     curl \
     psmisc \
     --no-install-recommends \
-    && curl -fsSL https://ollama.com/install.sh | sh \
     && rm -rf /var/lib/apt/lists/* \
-    && rm -rf /var/cache/apt/archives/* \
     && apt-get clean
+
+RUN curl -fsSL https://ollama.com/install.sh | sh
 
 # Start Ollama and download the model during build
 RUN ollama serve & \
