@@ -2,8 +2,12 @@
 .env
 .git
 .gitignore
+.streamlit/
 notebooks/
 data/
 dev/
+app/
+trash/
+nltk_data/
 src/
 plan.md
