@@ -9,17 +9,19 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Ollama
-RUN curl -fsSL https://ollama.com/install.sh | sh
+RUN curl -fSL https://ollama.com/install.sh | sh
 
 # Start Ollama and download the model during build
 RUN ollama serve & \
     sleep 10 && \
     ollama pull gemma3:12b-it-qat && \
-    killall ollama
+    pkill ollama && \
+    sleep 5
 
 # Install Python packages
-COPY requirements_runpod.txt /requirements_rundpod.txt
-RUN pip3 install --no-cache-dir -r /requirements_runpod.txt
+COPY requirements_runpod.txt /requirements_runpod.txt
+RUN pip3 install --no-cache-dir -r /requirements_runpod.txt && \
+    rm /requirements_runpod.txt
 
 # Create app directory
 WORKDIR /app

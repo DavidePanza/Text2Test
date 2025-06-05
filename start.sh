@@ -1,25 +1,18 @@
 #!/bin/bash
 
 # Start Ollama in the background
+echo "Starting Ollama server..."
 ollama serve &
 
 # Wait for Ollama to start
 echo "Waiting for Ollama to start..."
 while ! curl -s http://localhost:11434/api/tags > /dev/null; do
+    echo "  Ollama not ready yet, waiting 3 seconds..."
     sleep 3
 done
 
-# Start FastAPI in the background
-echo "Starting FastAPI server..."
-cd /app
-uvicorn src.app:app --host 0.0.0.0 --port 8000 &
+echo "Ollama is ready!"
 
-# Wait for FastAPI to start
-echo "Waiting for FastAPI to start..."
-while ! curl -s http://localhost:8000/health > /dev/null; do
-    sleep 3
-done
-
-# Start the handler
+# Start the RunPod handler directly
 echo "Starting RunPod handler..."
 python3 /app/src/handler.py
