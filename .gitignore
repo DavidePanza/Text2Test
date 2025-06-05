@@ -1,5 +1,6 @@
 data/
 trash/
+test/
 /dev/
 backup/
 .env
