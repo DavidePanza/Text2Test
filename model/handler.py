@@ -27,7 +27,7 @@ def handler(event):
 def handle_chat(job_input):
     """Handle conversational chat with message history"""
     payload = {
-        "model": "gemma3:12b-it-qat",
+        "model": "gemma3:4b-it-qat",
         "messages": job_input["messages"],
         "stream": False,
         "options": {
@@ -53,7 +53,7 @@ def handle_chat(job_input):
 def handle_generate(job_input):
     """Handle single-turn text generation"""
     payload = {
-        "model": "gemma3:12b-it-qat",
+        "model": "gemma3:4b-it-qat",
         "prompt": job_input["prompt"],
         "stream": False,
         "options": {
