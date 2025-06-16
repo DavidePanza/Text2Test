@@ -2,6 +2,7 @@ import runpod
 import requests
 import time
 
+
 def handler(event):
     try:
         job_input = event.get("input", {})
@@ -79,5 +80,7 @@ def handle_generate(job_input):
     else:
         return {"success": False, "error": f"Generate API error: {response.status_code}"}
 
-runpod.serverless.start(handler)
-
+# This is the correct way to start RunPod serverless
+if __name__ == "__main__":
+    print("Starting RunPod serverless handler...")
+    runpod.serverless.start({"handler": handler})

@@ -27,13 +27,11 @@ RUN pip3 install --no-cache-dir -r /tmp/requirements_runpod.txt && \
 
 # Create app directory
 WORKDIR /app
-
-# Copy files
 COPY model/ src/
 COPY start.sh .
-
-# Make start script executable
 RUN chmod +x start.sh
 
-# Set entrypoint
+# RunPod expects port 8000
+EXPOSE 8000
+
 CMD ["./start.sh"]
