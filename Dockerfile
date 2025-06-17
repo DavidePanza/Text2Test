@@ -13,10 +13,10 @@ RUN apt-get update && apt-get install -y \
 RUN curl -fsSL https://ollama.com/install.sh | sh
 
 # Start Ollama and download the model during build
-# gemma3:12b-it-qat (alternative)
+# gemma3:12b-it-qat (alternative)  gemma3:4b-it-qat
 RUN ollama serve & \
     sleep 15 && \
-    ollama pull gemma3:4b-it-qat && \ 
+    ollama pull gemma3:12b-it-qat && \ 
     pkill ollama && \
     sleep 5
 
