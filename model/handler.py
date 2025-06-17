@@ -24,6 +24,7 @@ def handler(event):
     except Exception as e:
         return {"success": False, "error": str(e)}
 
+
 def handle_chat(job_input):
     """Handle conversational chat with message history"""
     payload = {
@@ -49,6 +50,7 @@ def handle_chat(job_input):
         }
     else:
         return {"success": False, "error": f"Chat API error: {response.status_code}"}
+
 
 def handle_generate(job_input):
     """Handle single-turn text generation"""
@@ -79,6 +81,7 @@ def handle_generate(job_input):
         }
     else:
         return {"success": False, "error": f"Generate API error: {response.status_code}"}
+
 
 # This is the correct way to start RunPod serverless
 if __name__ == "__main__":
