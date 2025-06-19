@@ -1,7 +1,7 @@
 import streamlit as st
 from app.utils import debug_log, breaks
 from app.backend.get_requests import extract_chapters_from_toc
-from app.backend.raw_text_processing import extract_toc, extract_chapters
+from app.backend.raw_text_processing import extract_chapters
 from app.backend.text_processing import chapters_chunking
 from app.backend.toc_cleaning import extract_font_info, extract_lines_from_font_info, TextCleaner
 

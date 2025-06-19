@@ -9,3 +9,4 @@ plan.md
 nltk_data/
 notebooks/database/
 prompt_dev/
+.DS_Store 

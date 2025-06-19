@@ -19,7 +19,7 @@ def show_questions(questons_to_show):
             
             with col1:
                 st.html(f"<p style='font-size:18px; margin:0;'>{idx+1}. {question_text}</p>")
-                col1_ = st.columns([2, 3])[0]
+                col1_ = st.columns([2, 2])[0]
                 with col1_:
                     with st.expander("💡 Show Answer"):
                         st.write(answer_text)
