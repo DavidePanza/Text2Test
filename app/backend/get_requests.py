@@ -8,7 +8,14 @@ def extract_chapters_from_toc(toc_text: str):
     # prompt = format_messages_as_prompt(messages) get rid of this
     print("use prompt optimized for gemma3")
     raw_output = run_prompt(prompt)
-    st.session_state['chapters_dict'] = clean_and_parse_json(raw_output)
+    cleaned_output = clean_and_parse_json(raw_output)
+
+    # filter out chapters with empty start_page or end_page
+    filtered_chapters = [
+        chapter for chapter in cleaned_output 
+        if chapter.get('start_page') is not None and chapter.get('end_page') is not None
+    ]
+    st.session_state['chapters_dict'] = filtered_chapters
 
 
 def generate_questions_from_chapter(chunks, num_questions, max_questions=5):

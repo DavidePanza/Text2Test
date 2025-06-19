@@ -4,6 +4,7 @@
 .gitignore
 .streamlit/
 notebooks/
+requirements.txt
 data/
 dev/
 app/

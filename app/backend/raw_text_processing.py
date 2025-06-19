@@ -126,7 +126,7 @@ def extract_toc(page_range):
                 print(f"Warning: Page number {page_num} is out of bounds.")
 
     toc_text = "\n".join(chapters_content_list)
-    st.session_state["toc"] = toc_text
+    return toc_text # originally no return but toc was stored in st.session_state['toc']
 
 
 def extract_chapters(chapters_dict, pages_data_corrected):

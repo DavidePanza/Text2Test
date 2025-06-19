@@ -3,6 +3,7 @@ from app.utils import debug_log, breaks
 from app.backend.get_requests import extract_chapters_from_toc
 from app.backend.raw_text_processing import extract_toc, extract_chapters
 from app.backend.text_processing import chapters_chunking
+from app.backend.toc_cleaning import extract_font_info, extract_lines_from_font_info, TextCleaner
 
 
 def page_range_selector_ui():
@@ -54,10 +55,17 @@ def handle_page_range_submission(start_page, end_page):
 
 
 def extract_content_if_needed():
-    toc_range = st.session_state.get("toc_page_range")
+    """Extract TOC and chapters if not already done."""
+    toc_page_tuple = st.session_state.get("toc_page_range")
+    toc_page_range = range(toc_page_tuple[0], toc_page_tuple[1] + 1)
+    pdf_bytes = st.session_state.get("uploaded_pdf_bytes")
+    debug_log(f"page range: {toc_page_range}")
 
-    # Extract TOC
-    extract_toc(toc_range)
+    # Extract raw toc and clean it
+    font_info = extract_font_info(pdf_bytes, toc_page_range)
+    lines = extract_lines_from_font_info(font_info)
+    cleaner = TextCleaner()
+    st.session_state['toc'] = cleaner.process(lines)
     debug_log(f"TOC preview: {st.session_state.get('toc', '')[:200]}...")
 
     # Extract chapters dictionary if not already present
@@ -68,6 +76,7 @@ def extract_content_if_needed():
 
     # Extract chapters content
     chapters_dict = st.session_state.get("chapters_dict")
+    debug_log(f"Chapters preview: {chapters_dict}")
     pages_data_infos = st.session_state.get("pages_data_infos")
 
     if chapters_dict and pages_data_infos:
