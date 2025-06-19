@@ -1,6 +1,7 @@
 import fitz  
 import re
 import streamlit as st
+from app.utils import debug_log, breaks
 
 
 def extract_font_info(pdf_bytes, content_page_ranges, header_margin=70, footer_margin=100):
@@ -15,7 +16,7 @@ def extract_font_info(pdf_bytes, content_page_ranges, header_margin=70, footer_m
             pdf_bytes = pdf_bytes.encode()
             
         doc = fitz.open(stream=pdf_bytes, filetype="pdf")
-        st.write(f"PDF opened successfully. Pages: {len(doc)}")
+        debug_log(f"PDF opened successfully. Pages: {len(doc)}")
         
     except Exception as e:
         st.error(f"Error opening PDF: {e}")

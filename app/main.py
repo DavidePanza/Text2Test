@@ -31,7 +31,7 @@ EMBEDDING_MODEL = "all-MiniLM-L6-v2"
 model_path = "./chromadb_model"
 
 # Set-up Logger
-st.session_state.use_logger = True
+st.session_state.use_logger = False
 if st.session_state.use_logger: 
     level = st.selectbox("Logging level", ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"])
     logging.getLogger().setLevel(getattr(logging, level))

@@ -2,6 +2,7 @@ data/
 trash/
 test/
 /dev/
+__pycache__/
 backup/
 .env
 plan.md
