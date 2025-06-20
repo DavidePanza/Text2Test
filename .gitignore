@@ -7,6 +7,6 @@ backup/
 .env
 plan.md
 nltk_data/
-notebooks/database/
+notebooks/
 prompt_dev/
 .DS_Store 
