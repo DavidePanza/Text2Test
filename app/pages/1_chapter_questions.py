@@ -31,7 +31,8 @@ st.write("""
         Here you can generate questions based on a specific chapter.  
         To do this, please first select the page range that includes the Table of Contents (TOC) — sometimes called the index or contents page — which lists the chapters and their page numbers.  
 
-        This step is important because it helps the app automatically identify and locate chapters, so you can easily choose the exact chapter to generate questions from.
+        This step is important because it helps the app automatically identify and locate chapters, so you can easily choose the exact chapter to generate questions from.  
+        ⚠️ Please note: Chapter detection may fail if the document has a complex or non-standard layout. In such cases, we recommend using topic-based question generation instead.
         """)
 
 # Display the page range selector

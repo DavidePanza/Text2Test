@@ -10,7 +10,7 @@ def display_scrollable_pages():
             pdf_document = fitz.open(stream=st.session_state.get("uploaded_pdf_bytes"), filetype="pdf")
             
             # CSS styles
-            css = """ 
+            css = """
             <style>
             .scrolling-wrapper {
                 display: flex;
@@ -19,6 +19,9 @@ def display_scrollable_pages():
                 gap: 15px;
                 border: 1px solid #ddd;
                 margin-bottom: 20px;
+                max-width: 100%;
+                width: 100%;
+                box-sizing: border-box;
             }
             .page-container {
                 display: flex;
@@ -26,9 +29,12 @@ def display_scrollable_pages():
                 align-items: center;
                 gap: 5px;
                 flex-shrink: 0;
+                min-width: 300px;  /* Increased from 200px */
             }
             .page-image {
                 height: 450px;
+                width: auto;
+                max-width: 300px;  /* Increased from 200px */
                 border: 1px solid #ccc;
                 border-radius: 4px;
                 box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -37,6 +43,7 @@ def display_scrollable_pages():
                 font-weight: bold;
                 font-size: 16px;
                 color: #333;
+                font-family: 'Work Sans', sans-serif !important;
             }
             </style>
             """
