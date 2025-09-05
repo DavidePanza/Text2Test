@@ -1,23 +1,24 @@
-# Text2Test 📚➡️❓
+# Text2Test 
 
-**Text2Test** is an intelligent web application that transforms PDF documents into interactive study materials by automatically generating questions and answers. You can upload any PDF book or document, and let AI create meaningful questions to improve your learning experience.
+Text2test is a web app that generates downloadable questions and answers from PDF textbooks uploaded by users, helping students prepare for exams
+You can upload any PDF book or document, and let AI create questions to improve your learning experience.
 
 You can try the app for free at this link: [Text2Test](https://huggingface.co/spaces/davidepanza/test2text)
 
-## 🎯 Features
+## Features
 
 ### Two Question Generation Modes
-- **📖 Chapter-Based Questions**: Extract table of contents, select specific chapters, and generate targeted questions from chosen sections
-- **🔍 Topic-Based Questions**: Input keywords or topics to generate questions from relevant content across the entire document
+- **Chapter-Based Questions**: Extract table of contents, select specific chapters, and generate targeted questions from chosen sections
+- **Topic-Based Questions**: Input keywords or topics to generate questions from relevant content across the entire document
 
-### Smart PDF Processing
+### AI-powered PDF Processing
 - Automatic text extraction with PyMuPDF
 - Intelligent page numbering correction
 - Table of contents detection and parsing
 - Chapter boundary identification
 - PDF preview and inspection tools
 
-### Advanced AI Integration
+### AI Integration
 - **LLM**: Gemma2-12B-IT-4QAT model hosted on RunPod via Ollama
 - **Embeddings**: SentenceTransformers (all-MiniLM-L6-v2) for semantic search
 - **Vector Database**: ChromaDB for efficient content retrieval
@@ -25,12 +26,11 @@ You can try the app for free at this link: [Text2Test](https://huggingface.co/sp
 
 ### Export & Download
 - Generate downloadable Word documents (.docx) with all questions and answers organised by chapter or topic
-- Clean, formatted output ready for studying or teaching
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 ### Frontend & UI
-- **Streamlit**: Interactive web interface with multi-page navigation
+- **Streamlit**
 
 ### Backend Processing
 - **PyMuPDF (fitz)**: PDF text extraction and page analysis
@@ -50,7 +50,7 @@ You can try the app for free at this link: [Text2Test](https://huggingface.co/sp
 - Chapter boundary detection
 - Content preprocessing and optimization
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 text2test/
@@ -70,7 +70,7 @@ text2test/
 │   └── utils/                   # Helper functions
 ```
 
-## 🚀 How It Works
+## How It Works
 
 1. **Upload PDF**: Users upload their study material in PDF format
 2. **Text Extraction**: PyMuPDF extracts and processes text, identifying chapters and structure
@@ -81,9 +81,6 @@ text2test/
 5. **AI Processing**: Gemma2-12B-IT generates contextual questions and detailed answers
 6. **Export**: Download formatted questions as Word documents
 
-## 🎓 Use Cases
 
-- **Students**: Transform textbooks into practice questions
-- **Educators**: Create exams questions from course materials  
 
 
